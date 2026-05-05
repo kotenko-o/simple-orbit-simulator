@@ -1,104 +1,86 @@
 #include <cmath>
+#include "simple_vector.hpp"
 
 /**
- * @brief Represents a 2D vector and provides basic linear algebra operations.
+ * Class constructor
  */
-class SimpleVector {
-    private:
-        double x;
-        double y;
-    public:
-        /**
-         * @brief Class constructor
-         * @param[in] x     x-coordinate
-         * @param[in] y     y-coordinate
-         */
-        SimpleVector(double x, double y) : x(x), y(y) {}
-        /**
-         * @brief Getter for x-coordinate
-         * @return double   x-coordinate
-         */
-        double getX() const {
-            return this->x;
-        }
-        /**
-         * @brief       Getter for y-coordinate
-         * @return      double          x-coordinate
-         */
-        double getY() const {
-            return this->y;
-        }
-        /**
-         * @brief       Setter for x-coordinate
-         * @param[in]   x   x-coordinate
-         * @return      SimpleVector&   Reference on self
-         */
-        SimpleVector& setX(double x) {
-            this->x = x;
-            return *this;
-        }
-        /**
-         * @brief       Setter for y-coordinate
-         * @param[in]   y   x-coordinate
-         * @return      SimpleVector&   Reference on self
-         */
-        SimpleVector& setY(double y) {
-            this->y = y;
-            return *this;
-        }
-        /**
-         * @brief       Calculates length of vector
-         * @return      double          length of the vector
-         */
-        double abs() const {
-            return std::hypot(this->x, this->y);
-        }
-        /**
-         * @brief       Addition of two vectors
-         * @param[in]   vec             Vector to be added
-         * @return      SimpleVector    Vector sum
-         */
-        SimpleVector operator+(const SimpleVector& vec) const {
-            return SimpleVector((this->x + vec.x), (this->y + vec.y));
-        }
-        /**
-         * @brief       In-place addition of another vector
-         * @param[in]   vec     Vector to be added
-         */
-        void operator+=(const SimpleVector& vec) {
-            this->x += vec.x;
-            this->y += vec.y;
-        }
-        /**
-         * @brief       Subtraction of two vectors
-         * @param[in]   vec             Vector to be subtracted
-         * @return      SimpleVector    Vector difference
-         */
-        SimpleVector operator-(const SimpleVector& vec) const {
-            return SimpleVector((this->x - vec.x), (this->y - vec.y));
-        }
-        /**
-         * @brief       In-place subtraction of another vector
-         * @param[in]   vec     Vector to be subtracted
-         */
-        void operator-=(const SimpleVector& vec) {
-            this->x -= vec.x;
-            this->y -= vec.y;
-        }
-        /**
-         * @brief       Scalar multiplication
-         * @param[in]   scalar          Factor for multiplication
-         * @return      SimpleVector    The scaled vector
-         */
-        SimpleVector operator*(double scalar) const {
-            return SimpleVector((this->x * scalar), (this->y * scalar));
-        }
-        /**
-         * @brief       In-place scalar multiplication
-         * @param[in]   scalar  Factor for multiplication
-         */
-        void operator*=(double scalar) {
-            this->x *= scalar;
-            this->y *= scalar;
-        }
-};
+SimpleVector::SimpleVector(double x, double y) : x(x), y(y) {}
+
+/**
+ * Getter methods
+ */
+double SimpleVector::getX() const {
+    return this->x;
+}
+
+double SimpleVector::getY() const {
+    return this->y;
+}
+
+/**
+ * Setter methods
+ */
+SimpleVector& SimpleVector::setX(double x) {
+    this->x = x;
+    return *this;
+}
+
+SimpleVector& SimpleVector::setY(double y) {
+    this->y = y;
+    return *this;
+}
+/**
+ * @brief       Calculates length of vector
+ * @return      double          length of the vector
+ */
+double abs() const {
+    return std::hypot(this->x, this->y);
+}
+/**
+ * @brief       Addition of two vectors
+ * @param[in]   vec             Vector to be added
+ * @return      SimpleVector    Vector sum
+ */
+SimpleVector operator+(const SimpleVector& vec) const {
+    return SimpleVector((this->x + vec.x), (this->y + vec.y));
+}
+/**
+ * @brief       In-place addition of another vector
+ * @param[in]   vec     Vector to be added
+ */
+void operator+=(const SimpleVector& vec) {
+    this->x += vec.x;
+    this->y += vec.y;
+}
+/**
+ * @brief       Subtraction of two vectors
+ * @param[in]   vec             Vector to be subtracted
+ * @return      SimpleVector    Vector difference
+ */
+SimpleVector operator-(const SimpleVector& vec) const {
+    return SimpleVector((this->x - vec.x), (this->y - vec.y));
+}
+/**
+ * @brief       In-place subtraction of another vector
+ * @param[in]   vec     Vector to be subtracted
+ */
+void operator-=(const SimpleVector& vec) {
+    this->x -= vec.x;
+    this->y -= vec.y;
+}
+/**
+ * @brief       Scalar multiplication
+ * @param[in]   scalar          Factor for multiplication
+ * @return      SimpleVector    The scaled vector
+ */
+SimpleVector operator*(double scalar) const {
+    return SimpleVector((this->x * scalar), (this->y * scalar));
+}
+/**
+ * @brief       In-place scalar multiplication
+ * @param[in]   scalar  Factor for multiplication
+ */
+void operator*=(double scalar) {
+    this->x *= scalar;
+    this->y *= scalar;
+}
