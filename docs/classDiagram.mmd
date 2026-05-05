@@ -1,0 +1,58 @@
+classDiagram
+
+    SpaceObject <|-- FixedObject
+    SpaceObject <|-- FreeObject
+    Simulation "1" -- "*" SpaceObject : contains
+    
+    class Simulation {
+        - objects: std::vector<SpaceObject*>
+        - tick: int = 0
+        + addObject(SpaceObject&: object) void
+        + removeObject(SpaceObject&: object) void
+        + calculateSystem() void
+        + checkCollisions() CollisionReport
+        + nextStep() void
+    }
+
+    class SpaceObject {
+        # id: int ~readOnly, uniqie~
+        # position: SimpleVector
+        # mass: double
+        + recalculatePos(const SpaceObject&: object) ~isAbstract~
+    }
+
+    class FixedObject {
+        
+    }
+
+    class FreeObject {
+        # acceleration: SimpleVector
+        - calculateAffect(const SpaceObject&: object)
+        + calculateSpeed() SimpleVector
+    }
+
+    class SimpleVector {
+        - x: double
+        - y: double
+        + getX() double
+        + getY() double
+        + setX(x: double) *SimpleVector
+        + setY(y: double) *SimpleVector
+        + abs() double
+        + operator+(vec&: SimpleVector) SimpleVector
+        + operator+=(vec&: SimpleVector) void
+        + operator-(vec&: SimpleVector) SimpleVector
+        + operator-=(vec&: SimpleVector) void
+        + operator*(double scalar) SimpleVector
+        + operator*=(double scalar) void
+    }
+
+    class CollisionReport {
+        - object_1: SpaceObject
+        - object_2: SpaceObject
+        - coordinates: SimpleVector
+        + getObject1() SpaceObject
+        + getObject2() SpaceObject
+        + getCoordinates() SimpleVector
+        + printReport() void
+    }
