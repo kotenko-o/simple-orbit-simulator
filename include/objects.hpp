@@ -12,11 +12,14 @@ class SpaceObject {
         SimpleVector position;
         double mass;
     public:
+        SpaceObject(int id, double mass, SimpleVector pos) 
+            : id(id), position(pos), mass(mass) {}
+        virtual ~SpaceObject() {}
         /**
          * @brief       Updating the position in relation to the object
          * @param[in]   object      The object
          */
-        void virtual recalculatePos(const SpaceObject& object) = 0;        
+        virtual void recalculatePos(const SpaceObject& object) = 0;        
 };
 
 /**
@@ -24,7 +27,11 @@ class SpaceObject {
  * Non-moving static object. Applicable to systems such as Earth - Spaceship.
  * Used to avoid unnecessary calculations of extrem small moving of huge objects 
  */
-class FixedObject : public SpaceObject {};
+class FixedObject : public SpaceObject {
+    public:
+        using SpaceObject::SpaceObject;
+        virtual void recalculatePos(const SpaceObject& object) override {};
+};
 
 /**
  * @brief   Class for moving space objects 
@@ -37,12 +44,13 @@ class FreeObject : public SpaceObject {
          * @param[in]   object      The object
          */
         void calculateAffect(const SpaceObject& object);
-        void virtual recalculatePos(const SpaceObject& object) override;
     public:
+        FreeObject(int id, double mass, SimpleVector pos) : SpaceObject(id, mass, pos), acceleration(0,0) {}
         /**
          * @brief Calculate the momental speed
          */
-        double calculateSpeed();
+        double calculateSpeed() const;
+        void virtual recalculatePos(const SpaceObject& object) override;
 };
 
 #endif
