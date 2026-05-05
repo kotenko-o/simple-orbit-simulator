@@ -16,30 +16,30 @@ class SimpleVector {
          */
         SimpleVector(double x, double y);
         /**
-         * @brief Getter for x-coordinate
-         * @return double   x-coordinate
+         * @brief       Getter for x-coordinate
+         * @return      double   x-coordinate
          */
         double getX() const;
         /**
          * @brief       Getter for y-coordinate
-         * @return      double          x-coordinate
+         * @return      double   y-coordinate
          */
         double getY() const;
         /**
          * @brief       Setter for x-coordinate
-         * @param[in]   x   x-coordinate
+         * @param[in]   x       x-coordinate
          * @return      SimpleVector&   Reference on self
          */
         SimpleVector& setX(double x);
         /**
          * @brief       Setter for y-coordinate
-         * @param[in]   y   x-coordinate
+         * @param[in]   y       y-coordinate
          * @return      SimpleVector&   Reference on self
          */
         SimpleVector& setY(double y);
         /**
          * @brief       Calculates length of vector
-         * @return      double          length of the vector
+         * @return      double  length of the vector
          */
         double abs() const;
         /**
