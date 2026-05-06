@@ -10,4 +10,16 @@ flowchart TD
         IF1_C[[Graphics update, logging, etc.]]
         D(End)
     %% Connections
-        A --> B --> C --> IF1 --> IF1_A --> IF1_B --> IF1_B1 --> IF1_C --> IF1 --> D
+        A --> B --> C --> IF1
+        IF1 --yes--> IF1_A
+        IF1_C --> IF1
+        subgraph End
+            D
+        end
+        IF1 -- no --> D
+        subgraph Simulation::run
+            IF1
+            subgraph Simulation::nextStep
+                IF1_A --> IF1_B --> IF1_B1 --> IF1_C
+            end
+        end
