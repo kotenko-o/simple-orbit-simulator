@@ -12,9 +12,7 @@ namespace physics {
      * @param[in]   r       Distance between objects
      * @return      double  Force 1 to 2
      */
-    double calculateGravitationalForce(double m1, double m2, double dist) {
-        return GRAVITATIONAL_CONSTANT * (m1 * m2) / dist;
-    }
+    double calculateGravitationalForce(double m1, double m2, double dist);
 }
 
 #endif
