@@ -3,6 +3,9 @@ classDiagram
     SpaceObject <|-- FixedObject
     SpaceObject <|-- FreeObject
     Simulation "1" -- "*" SpaceObject : contains
+
+    SpaceObject *-- SimpleVector : composition
+    Simulation o-- SpaceObject : aggregation
     
     class Simulation {
         - objects: std::vector<SpaceObject*>
@@ -58,4 +61,10 @@ classDiagram
         + getObject2() SpaceObject
         + getCoordinates() SimpleVector
         + printReport() void
+    }
+
+    class Physics {
+        <<namespace>>
+        + GRAVITATIONAL_CONSTANT double
+        + calculateGravitationalForce(m1, m2, dist) double
     }
