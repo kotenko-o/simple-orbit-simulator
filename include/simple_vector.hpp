@@ -84,14 +84,14 @@ class SimpleVector {
          * @brief   Compare (==) two vectors
          * @return  bool
          */
-        bool operator==(const SimpleVector& v) {
+        bool operator==(const SimpleVector& v) const {
             return (this->getX() == v.getX() && this->getY() == v.getY());
         }
         /**
          * @brief   Compare (!=) two vectors
          * @return  bool
          */
-        bool operator!=(const SimpleVector& v) {
+        bool operator!=(const SimpleVector& v) const {
             return (this->getX() != v.getX() || this->getY() != v.getY());
         }
 };
