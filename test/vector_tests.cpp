@@ -1,14 +1,6 @@
-#include "test_framework.hpp"
+#include "test_framework.h"
 #include "simple_vector.hpp"
 #include <cmath>
-
-// Framework variables
-int passed_asserts = 0;
-int failed_asserts = 0;
-int passed_tests = 0;
-int failed_tests = 0;
-int test_number = 1;
-int is_test_failed = 0;
 
 void test_constructor_and_getters() {
     SimpleVector v1 = SimpleVector(1.0, 2.0);
@@ -43,11 +35,10 @@ void test_method_chaining() {
 int main() {
     TEST_HEADER;
 
-    RUN_TEST(test_constructor_and_getters);
-    RUN_TEST(test_vector_addition);
-    RUN_TEST(test_vector_length);
-    RUN_TEST(test_method_chaining);
-
+    RUN_TEST(test_constructor_and_getters());
+    RUN_TEST(test_vector_addition());
+    RUN_TEST(test_vector_length());
+    RUN_TEST(test_method_chaining());
     TEST_FOOTER;
 
     return (failed_tests == 0) ? 0 : 1;
