@@ -18,7 +18,9 @@ classDiagram
         # id: int ~readOnly, uniqie~
         # position: SimpleVector
         # mass: double
-        + recalculatePos(const SpaceObject&: object) ~isAbstract~
+        # appliedForce: SimpleVector
+        + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
+        + recalculatePos() ~isAbstract~
     }
 
     class FixedObject {
@@ -27,8 +29,8 @@ classDiagram
 
     class FreeObject {
         # acceleration: SimpleVector
-        - calculateAffect(const SpaceObject&: object)
-        + calculateSpeed() SimpleVector
+        # velicity: SimpleVector
+        + recalculateVelocity() SimpleVector
     }
 
     class SimpleVector {
@@ -48,8 +50,8 @@ classDiagram
     }
 
     class CollisionReport {
-        - object_1: SpaceObject
-        - object_2: SpaceObject
+        - object_1: SpaceObject*
+        - object_2: SpaceObject*
         - coordinates: SimpleVector
         + getObject1() SpaceObject
         + getObject2() SpaceObject
