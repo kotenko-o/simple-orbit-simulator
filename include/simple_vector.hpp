@@ -80,6 +80,20 @@ class SimpleVector {
          * @return      SimpleVectro    Unit-Vector
          */
         SimpleVector getUnitVector() const;
+        /**
+         * @brief   Compare (==) two vectors
+         * @return  bool
+         */
+        bool operator==(const SimpleVector& v) {
+            return (this->getX() == v.getX() && this->getY() == v.getY());
+        }
+        /**
+         * @brief   Compare (!=) two vectors
+         * @return  bool
+         */
+        bool operator!=(const SimpleVector& v) {
+            return (this->getX() != v.getX() || this->getY() != v.getY());
+        }
 };
 
 #endif

@@ -36,8 +36,7 @@ void test_unit() {
     double sigma = 0.001;
     SimpleVector v(3.0, 0.0);
     v = v.getUnitVector();
-    N_ASSERT(v.getX() - 1.0 < sigma);
-    N_ASSERT(v.getY() == 0.0);
+    N_ASSERT(v == SimpleVector(1.0, 0.0));
 }
 
 int main() {
