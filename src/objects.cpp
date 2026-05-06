@@ -9,5 +9,14 @@ void FreeObject::calculateAppliedForce(const SpaceObject& object) {
 }
 
 void FreeObject::calculateAffect(const SpaceObject& object) {
-    acceleration += this->appliedForce * this->mass;
+    this->acceleration += this->appliedForce * (1.0 / this->mass);
+}
+
+void FreeObject::recalculateVelocity() {
+    this->velocity += this->acceleration;
+}
+
+void FreeObject::recalculatePos() {
+    this->position += this->velocity;
+    this->appliedForce = SimpleVector(0, 0);
 }
