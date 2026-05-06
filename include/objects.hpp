@@ -27,6 +27,9 @@ class SpaceObject {
         double getMass() const {
             return this->mass;
         }
+        SimpleVector getAppliedForce() const {
+            return this->appliedForce;
+        }
 };
 
 /**
