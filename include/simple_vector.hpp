@@ -75,6 +75,11 @@ class SimpleVector {
          * @param[in]   scalar  Factor for multiplication
          */
         void operator*=(double scalar);
+        /**
+         * @brief       Calculates the unit-vector
+         * @return      SimpleVectro    Unit-Vector
+         */
+        SimpleVector getUnitVector() const;
 };
 
 #endif

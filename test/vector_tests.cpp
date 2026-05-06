@@ -32,6 +32,14 @@ void test_method_chaining() {
     N_ASSERT(v.getY() == 20.0);
 }
 
+void test_unit() {
+    double sigma = 0.001;
+    SimpleVector v(3.0, 0.0);
+    v = v.getUnitVector();
+    N_ASSERT(v.getX() - 1.0 < sigma);
+    N_ASSERT(v.getY() == 0.0);
+}
+
 int main() {
     TEST_HEADER;
 
@@ -39,6 +47,7 @@ int main() {
     RUN_TEST(test_vector_addition());
     RUN_TEST(test_vector_length());
     RUN_TEST(test_method_chaining());
+    RUN_TEST(test_unit());
     TEST_FOOTER;
 
     return (failed_tests == 0) ? 0 : 1;
