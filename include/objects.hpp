@@ -21,7 +21,7 @@ class SpaceObject {
          */
         virtual void recalculatePos() = 0;
         virtual void calculateAppliedForce(const SpaceObject& object) = 0;
-        SimpleVector getPossition() const {
+        SimpleVector getPosition() const {
             return this->position;
         }
         double getMass() const {

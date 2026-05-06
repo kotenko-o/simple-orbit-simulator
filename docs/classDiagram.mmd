@@ -24,7 +24,7 @@ classDiagram
         # appliedForce: SimpleVector
         + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
         + recalculatePos() ~isAbstract~
-        + getPossition() SimpleVector
+        + getPosition() SimpleVector
         + getMass() double
     }
 
@@ -34,7 +34,7 @@ classDiagram
 
     class FreeObject {
         # acceleration: SimpleVector
-        # velicity: SimpleVector
+        # velocity: SimpleVector
         + recalculateVelocity() SimpleVector
     }
 
