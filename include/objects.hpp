@@ -54,11 +54,6 @@ class FreeObject : public SpaceObject {
     protected:
         SimpleVector acceleration;
         SimpleVector velocity;
-        /**
-         * @brief Calculates affect on acceleration of one object
-         * @param[in]   object      The object
-         */
-        void calculateAffect(const SpaceObject& object);
     public:
         FreeObject(int id, double mass, SimpleVector pos, SimpleVector velocity) 
             : SpaceObject(id, mass, pos), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
