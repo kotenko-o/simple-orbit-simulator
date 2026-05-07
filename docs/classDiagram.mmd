@@ -25,7 +25,7 @@ classDiagram
         # mass: double
         # appliedForce: SimpleVector
         + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
-        + recalculatePos() ~isAbstract~
+        + recalculatePos(dt) ~isAbstract~
         + getPosition() SimpleVector
         + getAppliedForce() SimpleVector 
         + getMass() double
@@ -74,4 +74,13 @@ classDiagram
         <<namespace>>
         + GRAVITATIONAL_CONSTANT double
         + calculateGravitationalForce(m1, m2, dist) double
+    }
+
+    class console {
+        <<namespace>>
+        + outputObjectInfo() void
+    }
+
+    class logger {
+        <<namespace>>
     }
