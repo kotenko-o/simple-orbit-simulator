@@ -5,7 +5,7 @@
 void FreeObject::calculateAppliedForce(const SpaceObject& object) {
     SimpleVector distance = this->getPosition() - object.getPosition();
     double force = physics::calculateGravitationalForce(this->getMass(), object.getMass(), distance.abs());
-    this->appliedForce += distance.getUnitVector() * force;
+    this->appliedForce += distance.getUnitVector() * force * (-1);
 }
 
 void FreeObject::calculateAffect(const SpaceObject& object) {
