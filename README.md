@@ -3,6 +3,10 @@
 ## Description
 A simple, lightweight C++-based orbital mechanics simulator. It was developed as a training project in physics, mathematics, and object-oriented programming in C++.
 
+![Trajectory Exaple](docs/trajectoryExample.png)
+
+![[|]]
+
 ## Current State
 Development of the core physics engine and architecture.
 
