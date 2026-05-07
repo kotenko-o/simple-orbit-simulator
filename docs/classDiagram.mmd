@@ -3,6 +3,9 @@ classDiagram
     SpaceObject <|-- FixedObject
     SpaceObject <|-- FreeObject
     Simulation "1" -- "*" SpaceObject : contains
+
+    SpaceObject *-- SimpleVector : composition
+    Simulation o-- SpaceObject : aggregation
     
     class Simulation {
         - objects: std::vector<SpaceObject*>
@@ -15,10 +18,15 @@ classDiagram
     }
 
     class SpaceObject {
-        # id: int ~readOnly, uniqie~
+        # id: int ~readOnly, unique~
         # position: SimpleVector
         # mass: double
-        + recalculatePos(const SpaceObject&: object) ~isAbstract~
+        # appliedForce: SimpleVector
+        + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
+        + recalculatePos() ~isAbstract~
+        + getPosition() SimpleVector
+        + getAppliedForce() SimpleVector 
+        + getMass() double
     }
 
     class FixedObject {
@@ -27,8 +35,8 @@ classDiagram
 
     class FreeObject {
         # acceleration: SimpleVector
-        - calculateAffect(const SpaceObject&: object)
-        + calculateSpeed() SimpleVector
+        # velocity: SimpleVector
+        + recalculateVelocity() SimpleVector
     }
 
     class SimpleVector {
@@ -45,14 +53,21 @@ classDiagram
         + operator-=(vec&: SimpleVector) void
         + operator*(double scalar) SimpleVector
         + operator*=(double scalar) void
+        + $getUnitVector() SimpleVector
     }
 
     class CollisionReport {
-        - object_1: SpaceObject
-        - object_2: SpaceObject
+        - object_1: SpaceObject*
+        - object_2: SpaceObject*
         - coordinates: SimpleVector
         + getObject1() SpaceObject
         + getObject2() SpaceObject
         + getCoordinates() SimpleVector
         + printReport() void
+    }
+
+    class Physics {
+        <<namespace>>
+        + GRAVITATIONAL_CONSTANT double
+        + calculateGravitationalForce(m1, m2, dist) double
     }

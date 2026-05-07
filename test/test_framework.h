@@ -14,7 +14,7 @@
  *  - Optionale Nutzung des Standard-assert() von C
  *  - Unterdrückung von Konsolenausgaben während eines Tests
  *
- * @author Oleksandr Kotenko (2362366)
+ * @author Oleksandr K.
  * @date 13.03.2026
  * @version 2.1
  */
@@ -142,12 +142,12 @@ static inline float success_rate(int passed, int failed) {
     is_test_failed = false;                                         \
     SEPARATION_LINE;                                                \
     printf(S_RUN "[%d] %s \n", test_number, #func);                 \
-    SILENT_RUN(func);                                               \
+    func;                                               \
     if (is_test_failed == 1) {                                      \
         TEST_FAILED(func);                                          \
     } else if (is_test_failed == 0) {                               \
         TEST_PASSED(func);                                          \
-    }                                                               \
+    }                                                       \
 } while (0)                       
 
 #define TEST_PASSED(func) do {                                  \

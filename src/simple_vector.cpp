@@ -66,3 +66,11 @@ void SimpleVector::operator*=(double scalar) {
     this->x *= scalar;
     this->y *= scalar;
 }
+
+SimpleVector SimpleVector::getUnitVector() const {
+    if (this->abs() == 0) {
+        return SimpleVector(0, 0);
+    }
+    double factor = 1 / this->abs();
+    return (*this) * factor;
+}
