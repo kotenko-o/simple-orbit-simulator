@@ -65,7 +65,7 @@ class FreeObject : public SpaceObject {
         /**
          * @brief Calculate the momental speed
          */
-        void recalculateVelocity();
+        void recalculateVelocity(double dt);
         void virtual recalculatePos(double dt) override;
         virtual void calculateAppliedForce(const SpaceObject& object) override;
 };
