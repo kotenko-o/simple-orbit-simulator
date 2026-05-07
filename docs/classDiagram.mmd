@@ -8,8 +8,9 @@ classDiagram
     Simulation o-- SpaceObject : aggregation
     
     class Simulation {
-        - objects: std::vector<SpaceObject*>
-        - tick: int = 0
+        - current_tick: uint46_t = 0
+        - last_tick: uint46_t
+        - objects: vector<SpaceObject*>
         + addObject(SpaceObject&: object) void
         + removeObject(SpaceObject&: object) void
         + calculateSystem() void
