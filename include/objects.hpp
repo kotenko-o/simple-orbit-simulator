@@ -30,6 +30,9 @@ class SpaceObject {
         SimpleVector getAppliedForce() const {
             return this->appliedForce;
         }
+        int getId() const {
+            return this->id;
+        }
 };
 
 /**
