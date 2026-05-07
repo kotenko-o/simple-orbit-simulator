@@ -13,6 +13,7 @@ void FreeObject::calculateAffect(const SpaceObject& object) {
 }
 
 void FreeObject::recalculateVelocity() {
+    this->acceleration += this->appliedForce * (1.0 / this->mass);
     this->velocity += this->acceleration;
 }
 
