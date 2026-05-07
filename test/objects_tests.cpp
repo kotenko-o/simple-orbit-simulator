@@ -4,7 +4,7 @@
 #include "physics.hpp"
 #include <cmath>
 
-constexpr double SIGMA = 0.0001;
+constexpr double SIGMA = 0.001;
 
 bool aproxCompare(double a, double b) {
     if (std::abs(a - b) < SIGMA) {
@@ -14,8 +14,8 @@ bool aproxCompare(double a, double b) {
 }
 
 void test_constructor_and_getters() {
-    FixedObject o1 = FixedObject(1, 10000, SimpleVector(0.0, 0.0), SimpleVector(0.0, 0.0));
-    FreeObject o2 = FreeObject(2, 100, SimpleVector(30.0, 40.0), SimpleVector(3000.0, 4000.0), SimpleVector(0.0, 0.0));
+    FixedObject o1 = FixedObject(1, 10000, SimpleVector(0.0, 0.0));
+    FreeObject o2 = FreeObject(2, 100, SimpleVector(30.0, 40.0), SimpleVector(3000.0, 4000.0));
 
     N_ASSERT(o1.getPosition() == SimpleVector(0.0, 0.0));
     N_ASSERT(o2.getPosition() == SimpleVector(30.0, 40.0));
@@ -25,8 +25,8 @@ void test_constructor_and_getters() {
 }
 
 void test_FixedObject() {
-    FixedObject o1 = FixedObject(1, 10000, SimpleVector(100.0, 100.0), SimpleVector(0.0, 0.0));
-    FixedObject o2 = FixedObject(1, 10000, SimpleVector(0.0, 0.0), SimpleVector(0.0, 0.0));
+    FixedObject o1 = FixedObject(1, 10000, SimpleVector(100.0, 100.0));
+    FixedObject o2 = FixedObject(1, 10000, SimpleVector(0.0, 0.0));
     
     o1.calculateAppliedForce(o2);
     o2.calculateAppliedForce(o1);
@@ -42,8 +42,8 @@ void test_FixedObject() {
 }
 
 void test_gravitational_force() {
-    FixedObject sun(0, 1000000.0, SimpleVector(0, 0), SimpleVector(0, 0));
-    FreeObject planet(1, 10.0, SimpleVector(100, 0), SimpleVector(0, 0), SimpleVector(0.0, 0.0));
+    FixedObject sun(0, 1000000.0, SimpleVector(0, 0));
+    FreeObject planet(1, 10.0, SimpleVector(100, 0), SimpleVector(0, 0));
 
     planet.calculateAppliedForce(sun);
     

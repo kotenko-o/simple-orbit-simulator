@@ -13,8 +13,8 @@ class SpaceObject {
         double mass;
         SimpleVector appliedForce;
     public:
-        SpaceObject(int id, double mass, SimpleVector pos, SimpleVector appliedForce) 
-            : id(id), position(pos), mass(mass), appliedForce(appliedForce) {}
+        SpaceObject(int id, double mass, SimpleVector pos) 
+            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)) {}
         virtual ~SpaceObject() {}
         /**
          * @brief       Updating the position with the applied force
@@ -60,8 +60,8 @@ class FreeObject : public SpaceObject {
          */
         void calculateAffect(const SpaceObject& object);
     public:
-        FreeObject(int id, double mass, SimpleVector pos, SimpleVector acceleration, SimpleVector velocity) 
-            : SpaceObject(id, mass, pos, SimpleVector(0, 0)), acceleration(acceleration), velocity(velocity) {}
+        FreeObject(int id, double mass, SimpleVector pos, SimpleVector velocity) 
+            : SpaceObject(id, mass, pos), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
         /**
          * @brief Calculate the momental speed
          */
