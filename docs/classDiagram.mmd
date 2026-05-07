@@ -19,6 +19,7 @@ classDiagram
     }
 
     class SpaceObject {
+        <<abstract>>
         # id: int ~readOnly, unique~
         # position: SimpleVector
         # mass: double
@@ -28,6 +29,7 @@ classDiagram
         + getPosition() SimpleVector
         + getAppliedForce() SimpleVector 
         + getMass() double
+        + getId() int
     }
 
     class FixedObject {
@@ -55,6 +57,7 @@ classDiagram
         + operator*(double scalar) SimpleVector
         + operator*=(double scalar) void
         + $getUnitVector() SimpleVector
+        + operator<<(double scalar) void
     }
 
     class CollisionReport {
