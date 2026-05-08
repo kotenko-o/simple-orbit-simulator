@@ -14,14 +14,8 @@ namespace logs {
                 << "; " << std::setw(10) << "x-pos" << "; " << std::setw(10) << "y-pos"
                 << "; " << "mass;" << std::endl;
     }
-    void logFullObjectInfo(std::ostream& stream, FixedObject* obj, int tick) {
+    void logFullObjectInfo(std::ostream& stream, SpaceObject* obj, int tick) {
         stream << std::setw(7) << tick
-                << "; " << std::setw(3) << obj->getId() 
-                << "; " << std::setw(10) << obj->getPosition().getX() << "; " << std::setw(10) << obj->getPosition().getY()
-                << "; " << obj->getMass() << std::endl;
-    }
-    void logFullObjectInfo(std::ostream& stream, FreeObject* obj, int tick) {
-        stream << std::setw(7) << tick 
                 << "; " << std::setw(3) << obj->getId() 
                 << "; " << std::setw(10) << obj->getPosition().getX() << "; " << std::setw(10) << obj->getPosition().getY()
                 << "; " << obj->getMass() << std::endl;
