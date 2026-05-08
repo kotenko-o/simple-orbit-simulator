@@ -2,10 +2,13 @@
 #include "physics.hpp"
 #include <cmath>
 
+// necessary for gravitational force calculation, to avoid "infinite" force on close fly-by
+constexpr double MINIMAL_DISTANCE = 1e-9;
+
 void FreeObject::calculateAppliedForce(const SpaceObject& object) {
     SimpleVector distance = this->getPosition() - object.getPosition();
     double r = distance.abs();
-    double dist = (r < 1e-9) ? 1 : r;
+    double dist = (r < MINIMAL_DISTANCE) ? MINIMAL_DISTANCE : r;
     double force = physics::calculateGravitationalForce(this->getMass(), object.getMass(), dist);
     this->appliedForce += distance.getUnitVector() * force * (-1);
 }
