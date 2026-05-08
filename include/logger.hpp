@@ -7,6 +7,9 @@
 #include <iomanip>
 #include <fstream> 
 
+/**
+ * @namespace   Does the output operations
+ */
 namespace logs {
     void startLogTable(std::ostream& stream) {
         stream << std::setw(7) << "Tick "
@@ -22,12 +25,22 @@ namespace logs {
     }
 }
 
+/**
+ * @namespace   Opens and closes the .csv-files
+ */
 namespace csvLog {
     const std::string DEFAULT_FILE_NAME = "simulation_result.csv";
+    /**
+     * @brief   Opens new date file
+     * @return  fstream     File stream
+     */
     std::fstream startLog() {
         std::fstream myFile(DEFAULT_FILE_NAME, std::ios::out);
         return std::move(myFile);
     }
+    /**
+     * @brief   Safe closing the file
+     */
     void closeLog(std::fstream& myFile) {
         myFile.close();
     }

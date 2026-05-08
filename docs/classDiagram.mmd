@@ -8,8 +8,8 @@ classDiagram
     Simulation o-- SpaceObject : aggregation
     
     class Simulation {
-        - current_tick: uint46_t = 0
-        - last_tick: uint46_t
+        - current_tick: uint64_t = 0
+        - last_tick: uint64_t
         - objects: vector<SpaceObject*>
         + addObject(SpaceObject&: object) void
         + removeObject(SpaceObject&: object) void
@@ -54,9 +54,9 @@ classDiagram
         + operator+=(vec&: SimpleVector) void
         + operator-(vec&: SimpleVector) SimpleVector
         + operator-=(vec&: SimpleVector) void
-        + operator*(double scalar) SimpleVector
-        + operator*=(double scalar) void
-        + $getUnitVector() SimpleVector
+        + operator*(double: scalar) SimpleVector
+        + operator*=(double: scalar) void
+        + getUnitVector() SimpleVector
         + operator<<(double scalar) void
     }
 
@@ -73,14 +73,17 @@ classDiagram
     class Physics {
         <<namespace>>
         + GRAVITATIONAL_CONSTANT double
-        + calculateGravitationalForce(m1, m2, dist) double
+        + calculateGravitationalForce(m1: double, m2: double, dist: double) double
     }
 
-    class console {
+    class logs {
         <<namespace>>
-        + outputObjectInfo() void
+        startLogTable(stream: ostream&) void
+        logFullObjectInfo(stream: ostream&, obj: SpaceObject*, tick: int)
     }
 
-    class logger {
-        <<namespace>>
+    class csvLog {
+        + $DEFAULT_FILE_NAME: string = "simulation_result.csv"
+        + startLog(): fstream
+        + closeLog(myFile: fstream&)
     }
