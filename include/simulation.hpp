@@ -24,11 +24,7 @@ class Simulation {
         /**
          * @brief   Destructor
          */
-        ~Simulation() {
-            for (SpaceObject* object : objects) {
-                delete object;
-            }
-        }
+        ~Simulation() {}
         /**
          * @brief   Add new object to a simulation
          * @param[in]   obj     New object
