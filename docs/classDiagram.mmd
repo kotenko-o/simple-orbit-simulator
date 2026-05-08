@@ -1,11 +1,19 @@
 classDiagram
 
+    %% Inheritance
     SpaceObject <|-- FixedObject
     SpaceObject <|-- FreeObject
-    Simulation "1" -- "*" SpaceObject : contains
 
-    SpaceObject *-- SimpleVector : composition
-    Simulation o-- SpaceObject : aggregation
+    %% Structural Relationships
+    Simulation o-- SpaceObject : manages (aggregation)
+    SpaceObject *-- SimpleVector : has position/force (composition)
+    CollisionReport *-- SimpleVector : collision point (composition)
+
+    %% Dependencies (Usage)
+    Simulation ..> CollisionReport : creates
+    FreeObject ..> Physics : uses for gravity
+    logs ..> SpaceObject : logs data
+    csvLog ..> logs : provides stream
     
     class Simulation {
         - current_tick: uint64_t = 0
@@ -14,7 +22,7 @@ classDiagram
         + addObject(SpaceObject&: object) void
         + removeObject(SpaceObject&: object) void
         + calculateSystem() void
-        + checkCollisions() CollisionReport
+        + checkCollisions() CollisionReport <<not implemented>>
         + nextStep() void
     }
 
@@ -25,7 +33,7 @@ classDiagram
         # mass: double
         # appliedForce: SimpleVector
         + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
-        + recalculatePos(dt) ~isAbstract~
+        + recalculatePos(dt: double) ~isAbstract~
         + getPosition() SimpleVector
         + getAppliedForce() SimpleVector 
         + getMass() double
@@ -39,7 +47,7 @@ classDiagram
     class FreeObject {
         # acceleration: SimpleVector
         # velocity: SimpleVector
-        + recalculateVelocity() SimpleVector
+        + recalculateVelocity(dt: double) SimpleVector
     }
 
     class SimpleVector {
@@ -61,6 +69,7 @@ classDiagram
     }
 
     class CollisionReport {
+        <<perspective>>
         - object_1: SpaceObject*
         - object_2: SpaceObject*
         - coordinates: SimpleVector
@@ -83,6 +92,7 @@ classDiagram
     }
 
     class csvLog {
+        <<namespace>>
         + $DEFAULT_FILE_NAME: string = "simulation_result.csv"
         + startLog(): fstream
         + closeLog(myFile: fstream&)
