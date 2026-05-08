@@ -16,6 +16,9 @@ void FreeObject::recalculateVelocity(double dt) {
 
 void FreeObject::recalculatePos(double dt) {
     this->position += this->velocity * dt;
+}
+
+void FreeObject::reset() {
     this->appliedForce = SimpleVector(0, 0);
     this->acceleration = SimpleVector(0, 0);
 }

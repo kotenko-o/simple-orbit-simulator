@@ -33,6 +33,7 @@ class SpaceObject {
         int getId() const {
             return this->id;
         }
+        virtual void reset() {};
 };
 
 /**
@@ -63,6 +64,7 @@ class FreeObject : public SpaceObject {
         void recalculateVelocity(double dt);
         void virtual recalculatePos(double dt) override;
         virtual void calculateAppliedForce(const SpaceObject& object) override;
+        virtual void reset() override;
 };
 
 #endif
