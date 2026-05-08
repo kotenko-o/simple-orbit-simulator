@@ -130,27 +130,51 @@ Currently outlining the "Idea" Flowchart for the main engine loop:
 ```mermaid
 flowchart TD
     %% Nodes
-        A(Start)
-        B[[Create Simulation-Object]]
-        C[[Create and add SpaceObject's]]
-        IF1{Simulation running}
-        IF1_A[For all SpaceObject's: calculateAppliedForce other objects]
-        IF1_B[[For all SpaceObject's: recalculatePosition]]
-        IF1_B1[[Collision processing]]
-        IF1_C[[Graphics update, logging, etc.]]
-        D(End)
+    Start(Start)
+    InitSim[[Create Simulation Object]]
+    AddObj[[Create and add SpaceObjects]]
+    
+    %% Loop Condition
+    LoopStart{Tick < Last Tick?}
+    
+    %% Simulation Logic
+    CalcForce[For each SpaceObject:<br/>calculateAppliedForce]
+    MoveObj[For each SpaceObject:<br/>recalculatePos]
+    Collisions[[Collision processing]]
+    Logging[[Log Object Info to CSV/Console]]
+    Graphics[[Update graphics]]
+    Visualisation[[Diagram visualisation]]
+    
+    End(End)
+
     %% Connections
-        A --> B --> C --> IF1
-        IF1 --yes--> IF1_A
-        IF1_C --> IF1
-        subgraph End
-            D
-        end
-        IF1 -- no --> D
-        subgraph Simulation::run
-            IF1
-            subgraph Simulation::nextStep
-                IF1_A --> IF1_B --> IF1_B1 --> IF1_C
-            end
-        end
+    Start --> InitSim --> AddObj --> LoopStart
+    
+    LoopStart -- Yes --> CalcForce
+    CalcForce --> MoveObj
+    MoveObj --> Collisions
+    Collisions --> Logging
+    
+    %% Return to loop
+    Logging --> Graphics --> LoopStart
+    
+    LoopStart -- No --> Visualisation --> End
+
+    %% Grouping to match Code Structure
+    subgraph Simulation::calculateSystem
+        CalcForce
+        MoveObj
+        Collisions
+    end
+
+    %% Styling
+    style Collisions fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
+    classDef future color:#888
+    class Collisions future
+
+    style Graphics fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
+    class Graphicss future
+
+    style Visualisation fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
+    class Visualisation future
 ```
