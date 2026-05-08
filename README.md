@@ -6,7 +6,34 @@ A simple, lightweight C++-based orbital mechanics simulator. It was developed as
 ![Trajectory Example](docs/trajectoryExample.png)
 
 ## Current State
-Development of the core physics engine and architecture.
+The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported for external analysis.
+
+### Implemented Features
+- **Physics Core**: N-body gravitational interaction and Euler integration for movement
+- **Vector Library**: Custom `SimpleVector` class for 2D vector mathematics
+- **Flexible Architecture**: `SpaceObject` hierarchy allowing for stationary and dynamic objects
+- **Data Logging**: CSV-based logger that records object trajectories (position, velocity, mass)
+- **Test Suite**: Integrated unit testing framework for core modules
+
+### Roadmap
+- [ ] **Visualization** - implement "real time" visualisation and trajectory diagrams generation
+- [ ] **Better user interface** - console input of simulation and object data
+- [ ] **Collision Engine** - add collision moddels and collision handling
+- [ ] **Propulsion** - Add `ActiveObject` class to simulate thrusters and orbital maneuvers.
+
+## Getting Started
+
+### Prerequisites
+* C++17 compatible compiler (GCC, Clang, or MSVC)
+* CMake 4.2.3+
+
+### Build and Run
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build .
+./simulation
+```
 
 ## Architecture description:
 
@@ -173,8 +200,69 @@ flowchart TD
     class Collisions future
 
     style Graphics fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
-    class Graphicss future
+    class Graphics future
 
     style Visualisation fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
     class Visualisation future
+```
+
+## Simulation Setup Guide
+
+This guide explains how to integrate the engine into your own `main.cpp`.
+
+### 1. Create Simulation and Objects
+Initialize the simulation with the total number of ticks and the time-step (`dt`). Use `FixedObject` for stationary bodies (like a Sun) and `FreeObject` for dynamic bodies (like planets).
+
+```cpp
+// 1,000,000 steps with a time-step of 0.1 seconds
+uint64_t totalTicks = 1000000;
+double dt = 0.1;
+Simulation sim(totalTicks, dt);
+
+FixedObject sun(1, 1.989e30, SimpleVector(0, 0));
+FreeObject earth(2, 5.972e24, SimpleVector(1.496e11, 0), SimpleVector(0, 29780));
+```
+
+### 2. Register Objects and Initialize Logger
+
+Add your objects to the simulation. Then, open the CSV output file and write the table headers.
+```c++
+sim.addObject(&sun);
+sim.addObject(&earth);
+
+// Opens 'simulation_results.csv' and writes CSV headers
+std::fstream logFile = csvLog::startLog(); 
+logs::startLogTable(logFile);
+```
+
+### 3. Run the Simulation Loop
+
+The simulation calculates forces and updates positions in each step. To log multiple objects efficiently, store them in a vector and iterate through them at your desired intervals.
+
+```c++
+int snapShotInterval = 5000; // Log data every 5000 ticks
+std::vector<SpaceObject*> logList = { &sun, &earth };
+
+while (sim.getCurrentTick() < sim.getLastTick()) {
+    // Perform physics calculations
+    sim.calculateSystem();
+
+    // Log the state of all objects at the interval
+    if (sim.getCurrentTick() % snapShotInterval == 0) {
+        for (auto* obj : logList) {
+            logs::logFullObjectInfo(logFile, obj, sim.getCurrentTick());
+        }
+    }
+
+    // Advance to the next tick
+    sim.nextStep();
+}
+```
+
+4. Finalize
+
+Always close the file stream after the simulation finishes to ensure all data is saved correctly.
+
+```c++
+csvLog::closeLog(logFile);
 ```
