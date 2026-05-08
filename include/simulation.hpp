@@ -9,10 +9,26 @@
 
 class Simulation {
     private:
-        std::uint64_t current_tick;
-        std::uint64_t last_tick;
+        std::uint64_t current_tick = 0;
+        std::uint64_t last_tick = 0;
         std::vector<SpaceObject*> objects;
+        double dt;
     public:
+        /**
+         * @brief   Constructor
+         * @param[in]   lastTick    Tick up to wich simulation should run
+         * @param[in]   dt          Factor for time
+         */
+        Simulation(std::uint64_t lastTick, double dt) 
+            : last_tick(lastTick), dt(dt) {}
+        /**
+         * @brief   Destructor
+         */
+        ~Simulation() {
+            for (SpaceObject* object : objects) {
+                delete object;
+            }
+        }
         /**
          * @brief   Add new object to a simulation
          * @param[in]   obj     New object
@@ -37,4 +53,25 @@ class Simulation {
          * @brief   Tick change, "cleaning"
          */
         void nextStep();
+        /**
+         * @brief   Getter for dt
+         * @return  double  dt
+         */
+        double getDt() const {
+            return this->dt;
+        }
+        /**
+         * @brief   Getter for Current Tick
+         * @return  double  Curret Tick
+         */
+        int64_t getCurrentTick() const {
+            return this->current_tick;
+        }
+        /**
+         * @brief   Getter for last Tick
+         * @return  double  last Tick
+         */
+        int64_t getLastTick() const {
+            return this->last_tick;
+        }
 };
