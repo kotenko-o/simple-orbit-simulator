@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.3.2)
+cmake_minimum_required(VERSION 4.2.3)
 project(simple-orbit-simulator
     DESCRIPTION "A simple, lightweight C++-based orbital mechanics simulator. It was developed as a training project in physics, mathematics, and object-oriented programming in C++."
     LANGUAGES C CXX
@@ -10,6 +10,7 @@ add_library(engine_lib
     src/objects.cpp
     src/physics.cpp
     src/simple_vector.cpp
+    src/simulation.cpp
 )
 
 # Verbinden von header-Dateien zum lib
