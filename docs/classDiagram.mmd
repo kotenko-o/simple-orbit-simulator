@@ -1,32 +1,43 @@
 classDiagram
 
+    %% Inheritance
     SpaceObject <|-- FixedObject
     SpaceObject <|-- FreeObject
-    Simulation "1" -- "*" SpaceObject : contains
 
-    SpaceObject *-- SimpleVector : composition
-    Simulation o-- SpaceObject : aggregation
+    %% Structural Relationships
+    Simulation o-- SpaceObject : manages (aggregation)
+    SpaceObject *-- SimpleVector : has position/force (composition)
+    CollisionReport *-- SimpleVector : collision point (composition)
+
+    %% Dependencies (Usage)
+    Simulation ..> CollisionReport : creates
+    FreeObject ..> Physics : uses for gravity
+    logs ..> SpaceObject : logs data
+    csvLog ..> logs : provides stream
     
     class Simulation {
-        - objects: std::vector<SpaceObject*>
-        - tick: int = 0
+        - current_tick: uint64_t = 0
+        - last_tick: uint64_t
+        - objects: vector<SpaceObject*>
         + addObject(SpaceObject&: object) void
         + removeObject(SpaceObject&: object) void
         + calculateSystem() void
-        + checkCollisions() CollisionReport
+        + checkCollisions() CollisionReport <<not implemented>>
         + nextStep() void
     }
 
     class SpaceObject {
+        <<abstract>>
         # id: int ~readOnly, unique~
         # position: SimpleVector
         # mass: double
         # appliedForce: SimpleVector
         + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
-        + recalculatePos() ~isAbstract~
+        + recalculatePos(dt: double) ~isAbstract~
         + getPosition() SimpleVector
         + getAppliedForce() SimpleVector 
         + getMass() double
+        + getId() int
     }
 
     class FixedObject {
@@ -36,7 +47,7 @@ classDiagram
     class FreeObject {
         # acceleration: SimpleVector
         # velocity: SimpleVector
-        + recalculateVelocity() SimpleVector
+        + recalculateVelocity(dt: double) SimpleVector
     }
 
     class SimpleVector {
@@ -51,12 +62,14 @@ classDiagram
         + operator+=(vec&: SimpleVector) void
         + operator-(vec&: SimpleVector) SimpleVector
         + operator-=(vec&: SimpleVector) void
-        + operator*(double scalar) SimpleVector
-        + operator*=(double scalar) void
-        + $getUnitVector() SimpleVector
+        + operator*(double: scalar) SimpleVector
+        + operator*=(double: scalar) void
+        + getUnitVector() SimpleVector
+        + operator<<(double scalar) void
     }
 
     class CollisionReport {
+        <<perspective>>
         - object_1: SpaceObject*
         - object_2: SpaceObject*
         - coordinates: SimpleVector
@@ -69,5 +82,18 @@ classDiagram
     class Physics {
         <<namespace>>
         + GRAVITATIONAL_CONSTANT double
-        + calculateGravitationalForce(m1, m2, dist) double
+        + calculateGravitationalForce(m1: double, m2: double, dist: double) double
+    }
+
+    class logs {
+        <<namespace>>
+        startLogTable(stream: ostream&) void
+        logFullObjectInfo(stream: ostream&, obj: SpaceObject*, tick: int)
+    }
+
+    class csvLog {
+        <<namespace>>
+        + $DEFAULT_FILE_NAME: string = "simulation_result.csv"
+        + startLog(): fstream
+        + closeLog(myFile: fstream&)
     }

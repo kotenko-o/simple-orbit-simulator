@@ -13,13 +13,13 @@ class SpaceObject {
         double mass;
         SimpleVector appliedForce;
     public:
-        SpaceObject(int id, double mass, SimpleVector pos, SimpleVector appliedForce) 
-            : id(id), position(pos), mass(mass), appliedForce(appliedForce) {}
+        SpaceObject(int id, double mass, SimpleVector pos) 
+            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)) {}
         virtual ~SpaceObject() {}
         /**
          * @brief       Updating the position with the applied force
          */
-        virtual void recalculatePos() = 0;
+        virtual void recalculatePos(double dt) = 0;
         virtual void calculateAppliedForce(const SpaceObject& object) = 0;
         SimpleVector getPosition() const {
             return this->position;
@@ -30,6 +30,10 @@ class SpaceObject {
         SimpleVector getAppliedForce() const {
             return this->appliedForce;
         }
+        int getId() const {
+            return this->id;
+        }
+        virtual void reset() {};
 };
 
 /**
@@ -40,7 +44,7 @@ class SpaceObject {
 class FixedObject : public SpaceObject {
     public:
         using SpaceObject::SpaceObject;
-        virtual void recalculatePos() override {};
+        virtual void recalculatePos(double dt) override {};
         virtual void calculateAppliedForce(const SpaceObject& object) override {};
 };
 
@@ -51,20 +55,16 @@ class FreeObject : public SpaceObject {
     protected:
         SimpleVector acceleration;
         SimpleVector velocity;
-        /**
-         * @brief Calculates affect on acceleration of one object
-         * @param[in]   object      The object
-         */
-        void calculateAffect(const SpaceObject& object);
     public:
         FreeObject(int id, double mass, SimpleVector pos, SimpleVector velocity) 
-            : SpaceObject(id, mass, pos, SimpleVector(0, 0)), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
+            : SpaceObject(id, mass, pos), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
         /**
          * @brief Calculate the momental speed
          */
-        void recalculateVelocity();
-        void virtual recalculatePos() override;
+        void recalculateVelocity(double dt);
+        void virtual recalculatePos(double dt) override;
         virtual void calculateAppliedForce(const SpaceObject& object) override;
+        virtual void reset() override;
 };
 
 #endif

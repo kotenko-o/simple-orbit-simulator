@@ -1,6 +1,8 @@
 #ifndef SIMPLE_VECTOR_HPP
 #define SIMPLE_VECTOR_HPP
 
+#include <iostream>
+
 /**
  * @brief Represents a 2D vector and provides basic linear algebra operations.
  */
@@ -93,6 +95,10 @@ class SimpleVector {
          */
         bool operator!=(const SimpleVector& v) const {
             return (this->getX() != v.getX() || this->getY() != v.getY());
+        }
+        friend std::ostream& operator<<(std::ostream& os, const SimpleVector& vector) {
+            os << "[" << vector.getX() << ", " << vector.getY() << "]";
+            return os;
         }
 };
 
