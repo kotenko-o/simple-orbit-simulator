@@ -42,13 +42,16 @@ target_include_directories(test_framework
 # (Assuming the files are named .cpp, not .c.cpp)
 add_executable(run_test_objects test/objects_tests.cpp)
 add_executable(run_test_vector test/vector_tests.cpp)
+add_executable(run_test_simulation test/simulation_tests.cpp)
 
 # CRITICAL: Link the tests to both the engine and the test framework!
 target_link_libraries(run_test_objects engine_lib test_framework)
 target_link_libraries(run_test_vector engine_lib test_framework)
+target_link_libraries(run_test_simulation engine_lib test_framework)
 
 # 5. CTest Registrierung
 enable_testing()
 
 add_test(NAME objects_test COMMAND run_test_objects)
 add_test(NAME vector_test COMMAND run_test_vector)
+add_test(NAME simulation_test COMMAND run_test_simulation)
