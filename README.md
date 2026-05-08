@@ -4,9 +4,9 @@
 A simple, lightweight C++-based orbital mechanics simulator. It was developed as a training project in physics, mathematics, and object-oriented programming in C++.
 
 <div align="center">
-  <img src="docs/assets/system_overview.png" width="445" alt="System Overview" />
- <img src="docs/assets/trajectory_object_3.png" width="445" alt="Velocity vs Time" />
-  <img src="docs/assets/velocity_time.png" width="445" alt="Altitude vs Time" />
+  <img src="docs/assets/system_overview.png" width="245" alt="System Overview" />
+  <img src="docs/assets/trajectory_object_3.png" width="245" alt="Velocity vs Time" />
+  <img src="docs/assets/velocity_time.png" width="245" alt="Altitude vs Time" />
 </div>
 
 ## Current State
