@@ -16,7 +16,7 @@ class Simulation {
     public:
         /**
          * @brief   Constructor
-         * @param[in]   lastTick    Tick up to wich simulation should run
+         * @param[in]   lastTick    Tick up to which simulation should run
          * @param[in]   dt          Factor for time
          */
         Simulation(std::uint64_t lastTick, double dt) 

@@ -1,4 +1,7 @@
-// workaround for main
+/**
+ * @file    app.cpp
+ * @brief   Example for full simulatiot cycle
+ */
 
 #include "objects.hpp"
 #include "logger.hpp"
