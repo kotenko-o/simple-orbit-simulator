@@ -3,10 +3,14 @@
 ## Description
 A simple, lightweight C++-based orbital mechanics simulator. It was developed as a training project in physics, mathematics, and object-oriented programming in C++.
 
-![Trajectory Example](docs/trajectoryExample.png)
+<div align="center">
+  <img src="docs/assets/system_overview.png" width="445" alt="System Overview" />
+ <img src="docs/assets/trajectory_object_3.png" width="445" alt="Velocity vs Time" />
+  <img src="docs/assets/velocity_time.png" width="445" alt="Altitude vs Time" />
+</div>
 
 ## Current State
-The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported for external analysis.
+The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported as .csv for external analysis and ready diagrams.
 
 ### Implemented Features
 - **Physics Core**: N-body gravitational interaction and Euler integration for movement
@@ -14,9 +18,10 @@ The project currently features a functional 2D orbital mechanics core. It suppor
 - **Flexible Architecture**: `SpaceObject` hierarchy allowing for stationary and dynamic objects
 - **Data Logging**: CSV-based logger that records object trajectories (position, velocity, mass)
 - **Test Suite**: Integrated unit testing framework for core modules
+- **Post-Simulation Analysis**: Python suite for generating publication-quality orbital diagrams.
 
 ### Roadmap
-- [ ] **Visualization** - implement "real time" visualisation and trajectory diagrams generation
+- [ ] **Visualization** - implement "real time" visualisation
 - [ ] **Better user interface** - console input of simulation and object data
 - [ ] **Collision Engine** - add collision moddels and collision handling
 - [ ] **Propulsion** - Add `ActiveObject` class to simulate thrusters and orbital maneuvers.
@@ -26,6 +31,7 @@ The project currently features a functional 2D orbital mechanics core. It suppor
 ### Prerequisites
 * C++17 compatible compiler (GCC, Clang, or MSVC)
 * CMake 4.2.3+
+* Python 3.8+ (for visualization)
 
 ### Build and Run
 ```bash
@@ -44,9 +50,10 @@ cmake --build .
     - *[perspective]* `ActiveObject` - Objects which can move using their own thrust.
 2) `Simulation` - The class that contains the simulation loop and objects.
 3) `SimpleVector` - Core 2D vector math and logic.
-4) *[perspective]* `CollisionReport` - Class to detect and handle collisions.
-5) *[perspective]* `Graphics&Visualisation` - The visual part of the simulation.
+4) *[dev]* `CollisionReport` - Class to detect and handle collisions.
+5) *[perspective]* `Graphics` - The visual part of the simulation.
 6) `Logger` - Save the results of simulation
+7) `Visualisation` - Output as trajectories and graphics
 
 ```mermaid
 classDiagram
@@ -201,9 +208,6 @@ flowchart TD
 
     style Graphics fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
     class Graphics future
-
-    style Visualisation fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
-    class Visualisation future
 ```
 
 ## Simulation Setup Guide
@@ -266,3 +270,37 @@ Always close the file stream after the simulation finishes to ensure all data is
 ```c++
 csvLog::closeLog(logFile);
 ```
+
+## Post-Simulation Analysis
+
+The simulator includes a dedicated Python suite to transform raw `.csv` data into physical diagrams. This allows for verification of orbital stability, Keplerian laws, and energy conservation.
+
+### Features
+* **System Overview**: Full trajectory paths with mass-proportional markers.
+* **Temporal Analysis**: Color-coded paths showing the progression of time.
+* **Physics Graphs**: Automatic generation of Velocity-vs-Time and Altitude-vs-Time plots.
+
+### How to Run Visualization
+
+#### 1. **Prepare Environment** (recommended):
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+# or .venv\Scripts\activate on Windows
+pip install -r requirements.txt
+```
+
+#### 2. Generate Plots:
+
+```bash
+python scripts/visualize.py build/simulation_result.csv
+```
+
+## 🤝 Contributors
+
+Special thanks to the community members who help make SOS better:
+
+* **Timur, [@nerooon123](https://github.com/nerooon123)** — Developed the Python visualization suite.
+
+> Want to contribute? Feel free to fork the repo and submit a Pull Request!
