@@ -1,4 +1,20 @@
-# SOS - Simple Orbit Simulator
+<table border="0">
+  <tr>
+    <td width="300" align="center" valign="middle">
+      <img src="docs/assets/logo.png" width="280" alt="SOS Logo" />
+    </td>
+    <td valign="middle">
+      <h1>Simple Orbit Simulator</h1>
+      <p><b>N-body orbital mechanics engine</b></p>
+      <p><i>Because space is big, but physics is universal.</i></p>
+      <p>
+        <img src="https://img.shields.io/badge/C%2B%2B-17-blue.svg" alt="C++ 17" />
+        <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License" />
+        <img src="https://img.shields.io/badge/PRs-welcome-orange.svg" alt="PRs Welcome" />
+      </p>
+    </td>
+  </tr>
+</table>
 
 ## Description
 A simple, lightweight C++-based orbital mechanics simulator. It was developed as a training project in physics, mathematics, and object-oriented programming in C++.
