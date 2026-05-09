@@ -23,7 +23,8 @@ A lightweight, modular C++17 engine for N-body orbital mechanics. Originally a t
   <img src="docs/assets/system_overview.png" width="245" alt="System Overview" />
   <img src="docs/assets/trajectory_object_3.png" width="245" alt="Velocity vs Time" />
   <img src="docs/assets/velocity_time.png" width="245" alt="Altitude vs Time" />
-  
+</div>
+
 ## Current State
 The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported as .csv ready diagrams for external analysis.
 
