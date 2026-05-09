@@ -17,37 +17,72 @@
 </table>
 
 ## Description
-A simple, lightweight C++-based orbital mechanics simulator. It was developed as a training project in physics, mathematics, and object-oriented programming in C++.
+A lightweight, modular C++17 engine for N-body orbital mechanics. Originally a training project in physics and OOP, SOS is now evolving into an open-source tool for stable, high-performance space flight simulation.
 
 <div align="center">
   <img src="docs/assets/system_overview.png" width="245" alt="System Overview" />
   <img src="docs/assets/trajectory_object_3.png" width="245" alt="Velocity vs Time" />
   <img src="docs/assets/velocity_time.png" width="245" alt="Altitude vs Time" />
-</div>
-
+  
 ## Current State
-The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported as .csv for external analysis and ready diagrams.
+The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported as .csv ready diagrams for external analysis.
 
 ### Implemented Features
 - **Physics Core**: N-body gravitational interaction and Euler integration for movement
 - **Vector Library**: Custom `SimpleVector` class for 2D vector mathematics
-- **Flexible Architecture**: `SpaceObject` hierarchy allowing for stationary and dynamic objects
+- **Objects Architecture**: `SpaceObject` hierarchy allowing for stationary and dynamic objects
 - **Data Logging**: CSV-based logger that records object trajectories (position, velocity, mass)
 - **Test Suite**: Integrated unit testing framework for core modules
 - **Post-Simulation Analysis**: Python suite for generating publication-quality orbital diagrams.
 
-### Roadmap
-- [ ] **Visualization** - implement "real time" visualisation
+### Planned features
+- [ ] **Visualisation** - implement "real time" visualisation
 - [ ] **Better user interface** - console input of simulation and object data
-- [ ] **Collision Engine** - add collision moddels and collision handling
+- [ ] **Collision Engine** - add collision models and collision handling
 - [ ] **Propulsion** - Add `ActiveObject` class to simulate thrusters and orbital maneuvers.
+
+### Current Roadmap
+```mermaid
+flowchart LR
+    Now(Current state)
+
+    Now --> P11 --> P12
+    subgraph Phase1[Phase 1]
+        P11[Collision Engine #8]
+        P12[Memory management ref. #14]
+    end
+
+    P12 --> Split
+    Split{Architecture <br> Decoupling}
+
+    subgraph Phase2
+        Split
+        Engine
+        Interface
+    end
+
+    Split --> E1 --> E2
+    subgraph Engine[Physics Engine]
+        E1[Active objects]
+        E2[RK4 Integration]
+    end
+
+    Split --> PI1 --> PI2 --> PI3
+    subgraph Interface[Program interface]
+        PI1[JSON system <br> state import]
+        PI2[[JSON Active <br> objects commands]]
+        PI3[[Real time <br> visualisation]]
+    end
+
+Phase2 --> V1([v1.0.0 Stable Release])
+```
 
 ## Getting Started
 
 ### Prerequisites
 * C++17 compatible compiler (GCC, Clang, or MSVC)
 * CMake 4.2.3+
-* Python 3.8+ (for visualization)
+* Python 3.8+ (for visualisation)
 
 ### Build and Run
 ```bash
@@ -70,6 +105,9 @@ cmake --build .
 5) *[perspective]* `Graphics` - The visual part of the simulation.
 6) `Logger` - Save the results of simulation
 7) `Visualisation` - Output as trajectories and graphics
+
+>[!NOTE]
+>The API for object registration is currently being refactored to use smart-pointer factory methods (see Issue #14)
 
 ```mermaid
 classDiagram
@@ -296,7 +334,7 @@ The simulator includes a dedicated Python suite to transform raw `.csv` data int
 * **Temporal Analysis**: Color-coded paths showing the progression of time.
 * **Physics Graphs**: Automatic generation of Velocity-vs-Time and Altitude-vs-Time plots.
 
-### How to Run Visualization
+### How to Run visualisation
 
 #### 1. **Prepare Environment** (recommended):
 
@@ -317,6 +355,6 @@ python scripts/visualize.py build/simulation_result.csv
 
 Special thanks to the community members who help make SOS better:
 
-* **Timur, [@nerooon123](https://github.com/nerooon123)** — Developed the Python visualization suite.
+* **Timur, [@nerooon123](https://github.com/nerooon123)** — Developed the Python visualisation suite.
 
 > Want to contribute? Feel free to fork the repo and submit a Pull Request!
