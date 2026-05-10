@@ -63,8 +63,8 @@ class FreeObject : public SpaceObject {
         SimpleVector acceleration;
         SimpleVector velocity;
     public:
-        FreeObject(int id, double mass, SimpleVector pos, SimpleVector velocity) 
-            : SpaceObject(id, mass, pos), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
+        FreeObject(int id, double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb = nullptr) 
+            : SpaceObject(id, mass, pos, std::move(hb)), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
         /**
          * @brief Calculate the momental speed
          */
