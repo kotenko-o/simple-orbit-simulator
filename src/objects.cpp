@@ -30,5 +30,13 @@ void FreeObject::reset() {
 }
 
 bool SpaceObject::collisionCheck(const SpaceObject* obj) const {
-    return this->hitbox->checkCollision(obj->getHitbox());
+    // Ensure objects and hitboxes exist
+    if (!this->hitbox || !obj || !obj->getHitbox()) {
+        return false;
+    }
+    return this->hitbox->checkCollision(
+        obj->getHitbox(),       // Argument 1: The other hitbox
+        this->getPosition(),    // Argument 2: My position
+        obj->getPosition()      // Argument 3: The other object's position
+    );
 }

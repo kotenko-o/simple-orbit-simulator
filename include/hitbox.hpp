@@ -19,16 +19,19 @@ class Hitbox {
          * @return      bool    True if collide; False if not collide or 
          *                      hitbox can't be handeld yet
          */
-        virtual bool checkCollision(const Hitbox* hit) const = 0;
+        virtual bool checkCollision(const Hitbox* other, 
+                                const SimpleVector& myPos, 
+                                const SimpleVector& otherPos) const = 0;
 };
 
 class HitCircle : public Hitbox {
     private:
         double radius;
-        const SpaceObject* object;
     public:
-        HitCircle(double r, SpaceObject* obj);
-        bool checkCollision(const Hitbox* hit) const override;
+        HitCircle(double r);
+        bool checkCollision(const Hitbox* other, 
+                            const SimpleVector& myPos, 
+                            const SimpleVector& otherPos) const override;
         double getRadius() const; 
         SimpleVector getPosition() const;
 };

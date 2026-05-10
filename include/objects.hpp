@@ -3,6 +3,7 @@
 
 #include "simple_vector.hpp"
 #include "hitbox.hpp"
+#include <memory>
 
 /**
  * @class   Basic class for all space objects
@@ -13,10 +14,10 @@ class SpaceObject {
         SimpleVector position;
         double mass;
         SimpleVector appliedForce;
-        Hitbox* hitbox;
+        std::unique_ptr<Hitbox> hitbox;
     public:
-        SpaceObject(int id, double mass, SimpleVector pos) 
-            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)), hitbox(new HitCircle(1.0, this)) {}
+        SpaceObject(int id, double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr) 
+            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)), hitbox(hb ? std::move(hb) : std::make_unique<HitCircle>(1.0)) {}
         virtual ~SpaceObject() {}
         /**
          * @brief       Updating the position with the applied force
@@ -36,8 +37,8 @@ class SpaceObject {
             return this->id;
         }
         virtual void reset() {};
-        virtual Hitbox* getHitbox() const {
-            return this->hitbox;
+        virtual const Hitbox* getHitbox() const {
+            return this->hitbox.get(); 
         };
         bool collisionCheck(const SpaceObject* obj) const;
 };
