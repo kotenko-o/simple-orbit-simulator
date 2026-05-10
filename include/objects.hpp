@@ -6,7 +6,7 @@
 #include <memory>
 
 /**
- * @class   Basic class for all space objects
+ * @class   Abstract base class for all space objects
  */
 class SpaceObject {
     protected:
@@ -40,6 +40,11 @@ class SpaceObject {
         virtual const Hitbox* getHitbox() const {
             return this->hitbox.get(); 
         };
+        /**
+         * @brief       Checks if this object's hitbox overlaps with another
+         * @param[in]   obj     Pointer to the other SpaceObject
+         * @return      bool    True if a collision is detected, false otherwise.
+         */
         bool collisionCheck(const SpaceObject* obj) const;
 };
 
