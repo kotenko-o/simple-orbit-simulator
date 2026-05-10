@@ -9,9 +9,10 @@
 
 class Simulation {
     private:
+        int id = 0;
         std::uint64_t current_tick = 0;
         std::uint64_t last_tick = 0;
-        std::vector<SpaceObject*> objects;
+        std::vector<std::unique_ptr<SpaceObject>> objects;
         double dt;
     public:
         /**
@@ -29,8 +30,8 @@ class Simulation {
          * @brief   Add new object to a simulation
          * @param[in]   obj     New object
          */
-        void addObject(SpaceObject* obj) {
-            objects.push_back(obj);
+        void addObject(std::unique_ptr<SpaceObject> obj) {
+            objects.push_back(std::move(obj));
         }
         /**
          * @brief   Remove an object from simulation
@@ -69,5 +70,17 @@ class Simulation {
          */
         int64_t getLastTick() const {
             return this->last_tick;
+        }
+
+        void createFreeObject(double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb = nullptr) {
+            auto new_object = std::make_unique<FreeObject>(id, mass, pos, velocity, hb);
+            objects.push_back(std::move(new_object));
+            this->id++;
+        }
+
+        void createFixedObject(double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr) {
+            auto new_object = std::make_unique<FixedObject>(id, mass, pos, hb);
+            objects.push_back(std::move(new_object));
+            this->id++;
         }
 };
