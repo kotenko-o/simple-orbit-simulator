@@ -1,29 +1,36 @@
-enum ShapeType {
-    circle,
-    rectangle
-};
+#ifndef HITBOX_HPP
+#define HITBOX_HPP
+
+#include "simple_vector.hpp"
+class SpaceObject;
+
+constexpr double DEF_RADIUS = 1.0;
 
 /**
- * @class   Basic class for all geometrical shapes
+ * @class   Contains hitbox (form) of the object
  */
-class Shape {
-    protected:
-        ShapeType type;
+class Hitbox {
     public:
-        Shape() {};
-        virtual ShapeType getType() = 0;
-        ~Shape() {};
+        Hitbox() {}
+        virtual ~Hitbox() {}
+        /**
+         * @brief   Calculates, if a collision occired
+         * @param[in]   hit     Hitbox of the second body
+         * @return      bool    True if collide; False if not collide or 
+         *                      hitbox can't be handeld yet
+         */
+        virtual bool checkCollision(const Hitbox* hit) const = 0;
 };
 
-/**
- * @class   Circle shape class
- */
-class Circle : public Shape {
-    protected:
-        ShapeType type = circle;
+class HitCircle : public Hitbox {
+    private:
+        double radius;
+        const SpaceObject* object;
     public:
-        using Shape::Shape;
-        virtual ShapeType getType() override {
-            return circle;
-        }
+        HitCircle(double r, SpaceObject* obj);
+        bool checkCollision(const Hitbox* hit) const override;
+        double getRadius() const; 
+        SimpleVector getPosition() const;
 };
+
+#endif

@@ -28,3 +28,7 @@ void FreeObject::reset() {
     this->appliedForce = SimpleVector(0, 0);
     this->acceleration = SimpleVector(0, 0);
 }
+
+bool SpaceObject::collisionCheck(const SpaceObject* obj) const {
+    return this->hitbox->checkCollision(obj->getHitbox());
+}

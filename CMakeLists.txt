@@ -11,6 +11,7 @@ add_library(engine_lib
     src/physics.cpp
     src/simple_vector.cpp
     src/simulation.cpp
+    src/hitbox.cpp
 )
 
 # Verbinden von header-Dateien zum lib

@@ -2,6 +2,7 @@
 #define OBJECTS_HPP
 
 #include "simple_vector.hpp"
+#include "hitbox.hpp"
 
 /**
  * @class   Basic class for all space objects
@@ -12,9 +13,10 @@ class SpaceObject {
         SimpleVector position;
         double mass;
         SimpleVector appliedForce;
+        Hitbox* hitbox;
     public:
         SpaceObject(int id, double mass, SimpleVector pos) 
-            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)) {}
+            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)), hitbox(new HitCircle(1.0, this)) {}
         virtual ~SpaceObject() {}
         /**
          * @brief       Updating the position with the applied force
@@ -34,6 +36,10 @@ class SpaceObject {
             return this->id;
         }
         virtual void reset() {};
+        virtual Hitbox* getHitbox() const {
+            return this->hitbox;
+        };
+        bool collisionCheck(const SpaceObject* obj) const;
 };
 
 /**
