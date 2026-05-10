@@ -19,3 +19,13 @@ void Simulation::nextStep() {
     }
     this->current_tick++;
 }
+
+void Simulation::checkCollisions() const {
+    int objectsSize = this->objects.size();
+    for (int i = 0; i < objectsSize - 1; i++) {
+        for (int j = i + 1; j < objectsSize; j++) {
+                if (objects[i]->collisionCheck(objects[j]))
+                    std::cout << "Collision!" << std::endl;
+            }
+    }
+}

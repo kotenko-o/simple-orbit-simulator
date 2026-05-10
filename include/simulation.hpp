@@ -44,7 +44,7 @@ class Simulation {
         /**
          * @brief   Check for collisions and take action
          */
-        void checkCollisions();
+        void checkCollisions() const;
         /**
          * @brief   Tick change, "cleaning"
          */

@@ -2,9 +2,11 @@
 #define OBJECTS_HPP
 
 #include "simple_vector.hpp"
+#include "hitbox.hpp"
+#include <memory>
 
 /**
- * @class   Basic class for all space objects
+ * @class   Abstract base class for all space objects
  */
 class SpaceObject {
     protected:
@@ -12,9 +14,10 @@ class SpaceObject {
         SimpleVector position;
         double mass;
         SimpleVector appliedForce;
+        std::unique_ptr<Hitbox> hitbox;
     public:
-        SpaceObject(int id, double mass, SimpleVector pos) 
-            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)) {}
+        SpaceObject(int id, double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr) 
+            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)), hitbox(hb ? std::move(hb) : std::make_unique<HitCircle>(1.0)) {}
         virtual ~SpaceObject() {}
         /**
          * @brief       Updating the position with the applied force
@@ -34,6 +37,15 @@ class SpaceObject {
             return this->id;
         }
         virtual void reset() {};
+        virtual const Hitbox* getHitbox() const {
+            return this->hitbox.get(); 
+        };
+        /**
+         * @brief       Checks if this object's hitbox overlaps with another
+         * @param[in]   obj     Pointer to the other SpaceObject
+         * @return      bool    True if a collision is detected, false otherwise.
+         */
+        bool collisionCheck(const SpaceObject* obj) const;
 };
 
 /**
@@ -56,8 +68,8 @@ class FreeObject : public SpaceObject {
         SimpleVector acceleration;
         SimpleVector velocity;
     public:
-        FreeObject(int id, double mass, SimpleVector pos, SimpleVector velocity) 
-            : SpaceObject(id, mass, pos), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
+        FreeObject(int id, double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb = nullptr) 
+            : SpaceObject(id, mass, pos, std::move(hb)), acceleration(SimpleVector(0, 0)), velocity(velocity) {}
         /**
          * @brief Calculate the momental speed
          */
