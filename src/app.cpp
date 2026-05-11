@@ -13,22 +13,19 @@ int main() {
     double mMoon = 1.23e10;
     double mShip = 1.0;
 
-    FreeObject earth(1, mEarth, SimpleVector(0, 0),   SimpleVector(0, -0.00513));
-    FreeObject moon(2, mMoon,  SimpleVector(384, 0),  SimpleVector(0, 0.419));
-
-    Simulation sim(600000, 0.01);
+    Simulation sim(60000, 0.01);
     std::fstream file = csvLog::startLog();
+
+    SpaceObject* earth = sim.createFreeObject(mEarth, SimpleVector(0, 0), SimpleVector(0, -0.00513));
+    SpaceObject* moon = sim.createFreeObject(mMoon,  SimpleVector(384, 0),  SimpleVector(0, 0.419));
 
     logs::startLogTable(file);
 
-    sim.addObject(&earth);
-    sim.addObject(&moon);
-
-    while (sim.getCurrentTick() < sim.getLastTick()) {
+    while (sim.running()) {
         sim.calculateSystem();
-        if (sim.getCurrentTick() % 5000 == 0) {
-            logs::logFullObjectInfo(file, &earth, sim.getCurrentTick());
-            logs::logFullObjectInfo(file, &moon, sim.getCurrentTick());
+        if (sim.getCurrentTick() % 10000 == 0) {
+            logs::logFullObjectInfo(file, earth, sim.getCurrentTick());
+            logs::logFullObjectInfo(file, moon, sim.getCurrentTick());
         }
         sim.checkCollisions();
         sim.nextStep();
