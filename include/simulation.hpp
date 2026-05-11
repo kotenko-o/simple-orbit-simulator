@@ -72,15 +72,26 @@ class Simulation {
             return this->last_tick;
         }
 
-        void createFreeObject(double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb = nullptr) {
-            auto new_object = std::make_unique<FreeObject>(id, mass, pos, velocity, hb);
+        SpaceObject* createFreeObject(double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb = nullptr) {
+            auto new_object = std::make_unique<FreeObject>(id, mass, pos, velocity, std::move(hb));
+            SpaceObject* ptr = new_object.get();
             objects.push_back(std::move(new_object));
             this->id++;
+            return ptr;
         }
 
-        void createFixedObject(double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr) {
-            auto new_object = std::make_unique<FixedObject>(id, mass, pos, hb);
+        SpaceObject* createFixedObject(double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr) {
+            auto new_object = std::make_unique<FixedObject>(id, mass, pos, std::move(hb));
+            SpaceObject* ptr = new_object.get();
             objects.push_back(std::move(new_object));
             this->id++;
+            return ptr;
+        }
+
+        bool running() {
+            if (this->current_tick < this->last_tick) {
+                return true;
+            }
+            return false;
         }
 };
