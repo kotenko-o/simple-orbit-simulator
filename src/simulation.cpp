@@ -45,7 +45,7 @@ bool Simulation::running() const {
  *  Fabric Methods 
  * -------------------*/
 
-SpaceObject* Simulation::createFreeObject(double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb = nullptr) {
+SpaceObject* Simulation::createFreeObject(double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb) {
     auto new_object = std::make_unique<FreeObject>(id++, mass, pos, velocity, std::move(hb));
     SpaceObject* ptr = new_object.get();
     objects.push_back(std::move(new_object));
@@ -53,7 +53,7 @@ SpaceObject* Simulation::createFreeObject(double mass, SimpleVector pos, SimpleV
 }
 
 SpaceObject* Simulation::createFixedObject(double mass, SimpleVector pos, 
-                                        std::unique_ptr<Hitbox> hb = nullptr) {
+                                        std::unique_ptr<Hitbox> hb) {
     auto new_object = std::make_unique<FixedObject>(id++, mass, pos, std::move(hb));
     SpaceObject* ptr = new_object.get();
     objects.push_back(std::move(new_object));
