@@ -39,7 +39,7 @@ The project currently features a functional 2D orbital mechanics core. It suppor
 ### Planned features
 - [ ] **Visualisation** - implement "real time" visualisation
 - [ ] **Better user interface** - console input of simulation and object data
-- [ ] **Collision Engine** - add collision models and collision handling
+- [x] **Collision Engine** - add collision models and collision handling
 - [ ] **Propulsion** - Add `ActiveObject` class to simulate thrusters and orbital maneuvers.
 
 ### Current Roadmap
@@ -47,13 +47,12 @@ The project currently features a functional 2D orbital mechanics core. It suppor
 flowchart LR
     Now(Current state)
 
-    Now --> P11 --> P12
+    P11 --> P12 --> Now --> Split
     subgraph Phase1[Phase 1]
         P11[Collision Engine #8]
         P12[Memory management ref. #14]
     end
 
-    P12 --> Split
     Split{Architecture <br> Decoupling}
 
     subgraph Phase2
