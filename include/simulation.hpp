@@ -57,12 +57,7 @@ class Simulation {
         /**
          * @brief   Checks, if function should run
          */
-        bool running() const {
-            if (this->current_tick < this->last_tick) {
-                return true;
-            }
-            return false;
-        }
+        bool running() const;
         
         /* ------------------- 
          *  Getter Methods 
@@ -84,22 +79,12 @@ class Simulation {
          * @brief   Fabric method for creation of the free object
          * @return  SpaceObject*    Pointer to the object als reference
          */
-        SpaceObject* createFreeObject(double mass, SimpleVector pos, SimpleVector velocity, std::unique_ptr<Hitbox> hb = nullptr) {
-            auto new_object = std::make_unique<FreeObject>(id, mass, pos, velocity, std::move(hb));
-            SpaceObject* ptr = new_object.get();
-            objects.push_back(std::move(new_object));
-            this->id++;
-            return ptr;
-        }
+        SpaceObject* createFreeObject(double mass, SimpleVector pos, SimpleVector velocity, 
+                                        std::unique_ptr<Hitbox> hb = nullptr);
         /**
          * @brief   Fabric method for creation of the fixed object
          * @return  SpaceObject*    Pointer to the object als reference
          */
-        SpaceObject* createFixedObject(double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr) {
-            auto new_object = std::make_unique<FixedObject>(id, mass, pos, std::move(hb));
-            SpaceObject* ptr = new_object.get();
-            objects.push_back(std::move(new_object));
-            this->id++;
-            return ptr;
-        }
+        SpaceObject* createFixedObject(double mass, SimpleVector pos, 
+                                        std::unique_ptr<Hitbox> hb = nullptr);
 };
