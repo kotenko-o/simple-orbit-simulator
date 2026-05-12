@@ -1,5 +1,5 @@
-#include "objects.hpp"
-#include "physics.hpp"
+#include <objects.hpp>
+#include <physics.hpp>
 #include <cmath>
 
 // necessary for gravitational force calculation, to avoid "infinite" force on close fly-by

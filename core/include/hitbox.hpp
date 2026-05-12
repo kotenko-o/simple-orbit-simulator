@@ -1,7 +1,7 @@
 #ifndef HITBOX_HPP
 #define HITBOX_HPP
 
-#include "simple_vector.hpp"
+#include <simple_vector.hpp>
 class SpaceObject;
 
 /// @brief Default radius if none or invalid radius is given.

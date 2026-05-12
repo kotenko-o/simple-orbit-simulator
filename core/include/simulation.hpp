@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "objects.hpp"
+#include <objects.hpp>
 
 /**
  * @class Simulation

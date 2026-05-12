@@ -3,9 +3,9 @@
  * @brief   Example for full simulatiot cycle
  */
 
-#include "objects.hpp"
-#include "logger.hpp"
-#include "simulation.hpp"
+#include <objects.hpp>
+#include <logger.hpp>
+#include <simulation.hpp>
 
 int main() {
 

@@ -1,8 +1,8 @@
 #ifndef OBJECTS_HPP
 #define OBJECTS_HPP
 
-#include "simple_vector.hpp"
-#include "hitbox.hpp"
+#include <simple_vector.hpp>
+#include <hitbox.hpp>
 #include <memory>
 
 /**

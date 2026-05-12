@@ -1,5 +1,5 @@
 #include <cmath>
-#include "simple_vector.hpp"
+#include <simple_vector.hpp>
 
 /**
  * Class constructor
