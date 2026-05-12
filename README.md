@@ -1,7 +1,23 @@
-# SOS - Simple Orbit Simulator
+<table border="0">
+  <tr>
+    <td width="300" align="center" valign="middle">
+      <img src="docs/assets/logo.png" width="280" alt="SOS Logo" />
+    </td>
+    <td valign="middle">
+      <h1>Simple Orbit Simulator</h1>
+      <p><b>N-body orbital mechanics engine</b></p>
+      <p><i>Because space is big, but physics is universal.</i></p>
+      <p>
+        <img src="https://img.shields.io/badge/C%2B%2B-17-blue.svg" alt="C++ 17" />
+        <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License" />
+        <img src="https://img.shields.io/badge/PRs-welcome-orange.svg" alt="PRs Welcome" />
+      </p>
+    </td>
+  </tr>
+</table>
 
 ## Description
-A simple, lightweight C++-based orbital mechanics simulator. It was developed as a training project in physics, mathematics, and object-oriented programming in C++.
+A lightweight, modular C++17 engine for N-body orbital mechanics. Originally a training project in physics and OOP, SOS is now evolving into an open-source tool for stable, high-performance space flight simulation.
 
 <div align="center">
   <img src="docs/assets/system_overview.png" width="245" alt="System Overview" />
@@ -10,28 +26,63 @@ A simple, lightweight C++-based orbital mechanics simulator. It was developed as
 </div>
 
 ## Current State
-The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported as .csv for external analysis and ready diagrams.
+The project currently features a functional 2D orbital mechanics core. It supports multi-body simulations where gravity is calculated using Newton's Law, and results are exported as .csv ready diagrams for external analysis.
 
 ### Implemented Features
 - **Physics Core**: N-body gravitational interaction and Euler integration for movement
 - **Vector Library**: Custom `SimpleVector` class for 2D vector mathematics
-- **Flexible Architecture**: `SpaceObject` hierarchy allowing for stationary and dynamic objects
+- **Objects Architecture**: `SpaceObject` hierarchy allowing for stationary and dynamic objects
 - **Data Logging**: CSV-based logger that records object trajectories (position, velocity, mass)
 - **Test Suite**: Integrated unit testing framework for core modules
 - **Post-Simulation Analysis**: Python suite for generating publication-quality orbital diagrams.
 
-### Roadmap
-- [ ] **Visualization** - implement "real time" visualisation
+### Planned features
+- [ ] **Visualisation** - implement "real time" visualisation
 - [ ] **Better user interface** - console input of simulation and object data
-- [ ] **Collision Engine** - add collision moddels and collision handling
+- [x] **Collision Engine** - add collision models and collision handling
 - [ ] **Propulsion** - Add `ActiveObject` class to simulate thrusters and orbital maneuvers.
+
+### Current Roadmap
+```mermaid
+flowchart LR
+    Now(Current state)
+
+    P11 --> P12
+    subgraph Phase1[Phase 1]
+        P11[Collision Engine #8]
+        P12[Memory management ref. #14]
+    end
+
+    Split{Architecture <br> Decoupling}
+
+    subgraph Phase2
+        Split --> Now
+        Engine
+        Interface
+    end
+
+    Now --> E1 --> E2
+    subgraph Engine[Physics Engine]
+        E1[Active objects]
+        E2[RK4 Integration]
+    end
+
+    Now --> PI1 --> PI2 --> PI3
+    subgraph Interface[Program interface]
+        PI1[JSON system <br> state import]
+        PI2[[JSON Active <br> objects commands]]
+        PI3[[Real time <br> visualisation]]
+    end
+
+Phase2 --> V1([v1.0.0 Stable Release])
+```
 
 ## Getting Started
 
 ### Prerequisites
 * C++17 compatible compiler (GCC, Clang, or MSVC)
 * CMake 4.2.3+
-* Python 3.8+ (for visualization)
+* Python 3.8+ (for visualisation)
 
 ### Build and Run
 ```bash
@@ -50,10 +101,12 @@ cmake --build .
     - *[perspective]* `ActiveObject` - Objects which can move using their own thrust.
 2) `Simulation` - The class that contains the simulation loop and objects.
 3) `SimpleVector` - Core 2D vector math and logic.
-4) *[dev]* `CollisionReport` - Class to detect and handle collisions.
+4) *[dev]* `Hitbox` - Class to detect and handle collisions.
 5) *[perspective]* `Graphics` - The visual part of the simulation.
 6) `Logger` - Save the results of simulation
 7) `Visualisation` - Output as trajectories and graphics
+
+### Core class diagram
 
 ```mermaid
 classDiagram
@@ -74,14 +127,15 @@ classDiagram
     csvLog ..> logs : provides stream
     
     class Simulation {
+        - id: int = 0
         - current_tick: uint64_t = 0
-        - last_tick: uint64_t
-        - objects: vector<SpaceObject*>
-        + addObject(SpaceObject&: object) void
-        + removeObject(SpaceObject&: object) void
+        - last_tick: uint64_t = 0
+        - objects: vector<unique_ptr<SpaceObject>>
+        + addObject(object: unique_ptr<SpaceObject>) void
         + calculateSystem() void
-        + checkCollisions() CollisionReport <<not implemented>>
+        + checkCollisions() void ~query~
         + nextStep() void
+        + running() bool ~query~
     }
 
     class SpaceObject {
@@ -90,12 +144,11 @@ classDiagram
         # position: SimpleVector
         # mass: double
         # appliedForce: SimpleVector
-        + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
+        # hitbox: unique_ptr<Hitbox>
         + recalculatePos(dt: double) ~isAbstract~
-        + getPosition() SimpleVector
-        + getAppliedForce() SimpleVector 
-        + getMass() double
-        + getId() int
+        + calculateAppliedForce(object: const SpaceObject&) ~isAbstract~
+        + reset(): void
+        + collisionCheck(object: const SpaceObject&) ~query~
     }
 
     class FixedObject {
@@ -105,36 +158,30 @@ classDiagram
     class FreeObject {
         # acceleration: SimpleVector
         # velocity: SimpleVector
-        + recalculateVelocity(dt: double) SimpleVector
+        + recalculateVelocity(dt: double) void
+        + recalculatePos(dt: double)
+        + calculateAppliedForce(object: const SpaceObject&)
+        + reset() void
     }
 
     class SimpleVector {
         - x: double
         - y: double
-        + getX() double
-        + getY() double
+        + getX() double ~query~
+        + getY() double ~query~
         + setX(x: double) *SimpleVector
         + setY(y: double) *SimpleVector
-        + abs() double
-        + operator+(vec&: SimpleVector) SimpleVector
+        + abs() double ~query~
+        + operator+(vec&: SimpleVector) SimpleVector ~query~
         + operator+=(vec&: SimpleVector) void
-        + operator-(vec&: SimpleVector) SimpleVector
+        + operator-(vec&: SimpleVector) SimpleVector ~query~
         + operator-=(vec&: SimpleVector) void
-        + operator*(double: scalar) SimpleVector
+        + operator*(double: scalar) SimpleVector ~query~
         + operator*=(double: scalar) void
-        + getUnitVector() SimpleVector
-        + operator<<(double scalar) void
-    }
-
-    class CollisionReport {
-        <<perspective>>
-        - object_1: SpaceObject*
-        - object_2: SpaceObject*
-        - coordinates: SimpleVector
-        + getObject1() SpaceObject
-        + getObject2() SpaceObject
-        + getCoordinates() SimpleVector
-        + printReport() void
+        + getUnitVector() SimpleVector ~query~
+        + operator==(v: const SimpleVector&) bool ~query~
+        + operator!=(v: const SimpleVector&) bool ~query~
+        + operator<<(double scalar) void ~friend, query~
     }
 
     class Physics {
@@ -142,7 +189,12 @@ classDiagram
         + GRAVITATIONAL_CONSTANT double
         + calculateGravitationalForce(m1: double, m2: double, dist: double) double
     }
+```
 
+### App class diagram
+
+```mermaid
+classDiagram
     class logs {
         <<namespace>>
         startLogTable(stream: ostream&) void
@@ -155,59 +207,17 @@ classDiagram
         + startLog(): fstream
         + closeLog(myFile: fstream&)
     }
-```
 
-## Process
-
-Currently outlining the "Idea" Flowchart for the main engine loop:
-
-```mermaid
-flowchart TD
-    %% Nodes
-    Start(Start)
-    InitSim[[Create Simulation Object]]
-    AddObj[[Create and add SpaceObjects]]
-    
-    %% Loop Condition
-    LoopStart{Tick < Last Tick?}
-    
-    %% Simulation Logic
-    CalcForce[For each SpaceObject:<br/>calculateAppliedForce]
-    MoveObj[For each SpaceObject:<br/>recalculatePos]
-    Collisions[[Collision processing]]
-    Logging[[Log Object Info to CSV/Console]]
-    Graphics[[Update graphics]]
-    Visualisation[[Diagram visualisation]]
-    
-    End(End)
-
-    %% Connections
-    Start --> InitSim --> AddObj --> LoopStart
-    
-    LoopStart -- Yes --> CalcForce
-    CalcForce --> MoveObj
-    MoveObj --> Collisions
-    Collisions --> Logging
-    
-    %% Return to loop
-    Logging --> Graphics --> LoopStart
-    
-    LoopStart -- No --> Visualisation --> End
-
-    %% Grouping to match Code Structure
-    subgraph Simulation::calculateSystem
-        CalcForce
-        MoveObj
-        Collisions
-    end
-
-    %% Styling
-    style Collisions fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
-    classDef future color:#888
-    class Collisions future
-
-    style Graphics fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
-    class Graphics future
+        class CollisionReport {
+        <<perspective>>
+        - object_1: SpaceObject*
+        - object_2: SpaceObject*
+        - coordinates: SimpleVector
+        + getObject1() SpaceObject
+        + getObject2() SpaceObject
+        + getCoordinates() SimpleVector
+        + printReport() void
+    }
 ```
 
 ## Simulation Setup Guide
@@ -223,17 +233,14 @@ uint64_t totalTicks = 1000000;
 double dt = 0.1;
 Simulation sim(totalTicks, dt);
 
-FixedObject sun(1, 1.989e30, SimpleVector(0, 0));
-FreeObject earth(2, 5.972e24, SimpleVector(1.496e11, 0), SimpleVector(0, 29780));
+SpaceObject* sun = sim.createFixedObject(1.989e30, SimpleVector(0, 0));
+SpaceObject* earth = sim.createFreeObject(5.972e24, SimpleVector(1.496e11, 0), SimpleVector(0, 29780));
 ```
 
-### 2. Register Objects and Initialize Logger
+### 2. Initialize Logger
 
 Add your objects to the simulation. Then, open the CSV output file and write the table headers.
 ```c++
-sim.addObject(&sun);
-sim.addObject(&earth);
-
 // Opens 'simulation_results.csv' and writes CSV headers
 std::fstream logFile = csvLog::startLog(); 
 logs::startLogTable(logFile);
@@ -245,19 +252,20 @@ The simulation calculates forces and updates positions in each step. To log mult
 
 ```c++
 int snapShotInterval = 5000; // Log data every 5000 ticks
-std::vector<SpaceObject*> logList = { &sun, &earth };
 
-while (sim.getCurrentTick() < sim.getLastTick()) {
+while (sim.running()) {
     // Perform physics calculations
     sim.calculateSystem();
 
     // Log the state of all objects at the interval
     if (sim.getCurrentTick() % snapShotInterval == 0) {
-        for (auto* obj : logList) {
-            logs::logFullObjectInfo(logFile, obj, sim.getCurrentTick());
+        for (auto* obj : logList) {            
+            logs::logFullObjectInfo(file, earth, sim.getCurrentTick());
+            logs::logFullObjectInfo(file, moon, sim.getCurrentTick());
         }
     }
 
+    sim.checkCollisions();
     // Advance to the next tick
     sim.nextStep();
 }
@@ -280,7 +288,7 @@ The simulator includes a dedicated Python suite to transform raw `.csv` data int
 * **Temporal Analysis**: Color-coded paths showing the progression of time.
 * **Physics Graphs**: Automatic generation of Velocity-vs-Time and Altitude-vs-Time plots.
 
-### How to Run Visualization
+### How to Run visualisation
 
 #### 1. **Prepare Environment** (recommended):
 
@@ -301,6 +309,6 @@ python scripts/visualize.py build/simulation_result.csv
 
 Special thanks to the community members who help make SOS better:
 
-* **Timur, [@nerooon123](https://github.com/nerooon123)** — Developed the Python visualization suite.
+* **Timur, [@nerooon123](https://github.com/nerooon123)** — Developed the Python visualisation suite.
 
 > Want to contribute? Feel free to fork the repo and submit a Pull Request!

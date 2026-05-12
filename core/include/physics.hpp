@@ -1,7 +1,7 @@
 #ifndef PHYSICS_HPP
 #define PHYSICS_HPP
 
-#include "simple_vector.hpp"
+#include <simple_vector.hpp>
 
 namespace physics {
     constexpr double GRAVITATIONAL_CONSTANT = 6.674e-11;

@@ -1,5 +1,5 @@
-#include "objects.hpp"
-#include "physics.hpp"
+#include <objects.hpp>
+#include <physics.hpp>
 #include <cmath>
 
 // necessary for gravitational force calculation, to avoid "infinite" force on close fly-by
@@ -27,4 +27,16 @@ void FreeObject::recalculatePos(double dt) {
 void FreeObject::reset() {
     this->appliedForce = SimpleVector(0, 0);
     this->acceleration = SimpleVector(0, 0);
+}
+
+bool SpaceObject::collisionCheck(const SpaceObject* obj) const {
+    // Ensure objects and hitboxes exist
+    if (!this->hitbox || !obj || !obj->getHitbox()) {
+        return false;
+    }
+    return this->hitbox->checkCollision(
+        obj->getHitbox(),       // Argument 1: The other hitbox
+        this->getPosition(),    // Argument 2: My position
+        obj->getPosition()      // Argument 3: The other object's position
+    );
 }
