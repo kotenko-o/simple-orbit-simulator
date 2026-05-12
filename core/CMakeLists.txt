@@ -7,5 +7,5 @@ add_library(SOSCore STATIC
 )
 
 target_include_directories(SOSCore
-    PUBLIC include
-)   
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
