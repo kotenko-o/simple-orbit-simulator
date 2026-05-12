@@ -53,7 +53,7 @@ flowchart LR
         P12[Memory management ref. #14]
     end
 
-    Split{Architecture <br> Decoupling}
+    P12-->Split{Architecture <br> Decoupling}
 
     subgraph Phase2
         Split --> Now
