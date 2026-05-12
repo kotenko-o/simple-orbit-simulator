@@ -1,8 +1,8 @@
 #ifndef CONSOLE_HPP
 #define CONSOLE_HPP
 
-#include "simple_vector.hpp"
-#include "objects.hpp"
+#include <simple_vector.hpp>
+#include <objects.hpp>
 #include <iostream>
 #include <iomanip>
 #include <fstream> 

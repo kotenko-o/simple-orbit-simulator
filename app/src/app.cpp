@@ -4,7 +4,7 @@
  */
 
 #include <objects.hpp>
-#include <logger.hpp>
+#include "logger.hpp"
 #include <simulation.hpp>
 
 int main() {
