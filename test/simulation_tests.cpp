@@ -5,7 +5,7 @@
 
 TEST_CASE("two bodys movement", "[simulation]") {
     double mass = 1e12;
-    Simulation sim(10, 0.0);
+    Simulation sim(10, 1.0);
 
     SpaceObject* p1 = sim.createFreeObject(mass, SimpleVector(0, 0), SimpleVector(0, 0));
     SpaceObject* p2 = sim.createFreeObject(mass, SimpleVector(100, 0), SimpleVector(0, 0));
