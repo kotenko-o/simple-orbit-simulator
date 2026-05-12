@@ -1,7 +1,7 @@
-#include "simulation.hpp"
-#include "objects.hpp"
-#include "test_framework.h"
-#include  "simple_vector.hpp"
+#include <simulation.hpp>
+#include <objects.hpp>
+#include <test_framework.h>
+#include <simple_vector.hpp>
 
 void test_simple_two_body_movement() {
     double mass = 1e12;

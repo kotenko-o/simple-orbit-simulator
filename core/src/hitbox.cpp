@@ -1,4 +1,4 @@
-#include "hitbox.hpp"
+#include <hitbox.hpp>
 
 HitCircle::HitCircle(double r) : 
     radius(r > 0 ? r : DEF_RADIUS) {}

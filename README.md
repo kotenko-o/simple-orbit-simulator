@@ -47,7 +47,7 @@ The project currently features a functional 2D orbital mechanics core. It suppor
 flowchart LR
     Now(Current state)
 
-    P11 --> P12 --> Now --> Split
+    P11 --> P12
     subgraph Phase1[Phase 1]
         P11[Collision Engine #8]
         P12[Memory management ref. #14]
@@ -56,18 +56,18 @@ flowchart LR
     Split{Architecture <br> Decoupling}
 
     subgraph Phase2
-        Split
+        Split --> Now
         Engine
         Interface
     end
 
-    Split --> E1 --> E2
+    Now --> E1 --> E2
     subgraph Engine[Physics Engine]
         E1[Active objects]
         E2[RK4 Integration]
     end
 
-    Split --> PI1 --> PI2 --> PI3
+    Now --> PI1 --> PI2 --> PI3
     subgraph Interface[Program interface]
         PI1[JSON system <br> state import]
         PI2[[JSON Active <br> objects commands]]
@@ -101,13 +101,12 @@ cmake --build .
     - *[perspective]* `ActiveObject` - Objects which can move using their own thrust.
 2) `Simulation` - The class that contains the simulation loop and objects.
 3) `SimpleVector` - Core 2D vector math and logic.
-4) *[dev]* `CollisionReport` - Class to detect and handle collisions.
+4) *[dev]* `Hitbox` - Class to detect and handle collisions.
 5) *[perspective]* `Graphics` - The visual part of the simulation.
 6) `Logger` - Save the results of simulation
 7) `Visualisation` - Output as trajectories and graphics
 
->[!NOTE]
->The API for object registration is currently being refactored to use smart-pointer factory methods (see Issue #14)
+### Core class diagram
 
 ```mermaid
 classDiagram
@@ -128,14 +127,15 @@ classDiagram
     csvLog ..> logs : provides stream
     
     class Simulation {
+        - id: int = 0
         - current_tick: uint64_t = 0
-        - last_tick: uint64_t
-        - objects: vector<SpaceObject*>
-        + addObject(SpaceObject&: object) void
-        + removeObject(SpaceObject&: object) void
+        - last_tick: uint64_t = 0
+        - objects: vector<unique_ptr<SpaceObject>>
+        + addObject(object: unique_ptr<SpaceObject>) void
         + calculateSystem() void
-        + checkCollisions() CollisionReport <<not implemented>>
+        + checkCollisions() void ~query~
         + nextStep() void
+        + running() bool ~query~
     }
 
     class SpaceObject {
@@ -144,12 +144,11 @@ classDiagram
         # position: SimpleVector
         # mass: double
         # appliedForce: SimpleVector
-        + calculateAppliedForce(const SpaceObject&: object) ~isAbstract~
+        # hitbox: unique_ptr<Hitbox>
         + recalculatePos(dt: double) ~isAbstract~
-        + getPosition() SimpleVector
-        + getAppliedForce() SimpleVector 
-        + getMass() double
-        + getId() int
+        + calculateAppliedForce(object: const SpaceObject&) ~isAbstract~
+        + reset(): void
+        + collisionCheck(object: const SpaceObject&) ~query~
     }
 
     class FixedObject {
@@ -159,36 +158,30 @@ classDiagram
     class FreeObject {
         # acceleration: SimpleVector
         # velocity: SimpleVector
-        + recalculateVelocity(dt: double) SimpleVector
+        + recalculateVelocity(dt: double) void
+        + recalculatePos(dt: double)
+        + calculateAppliedForce(object: const SpaceObject&)
+        + reset() void
     }
 
     class SimpleVector {
         - x: double
         - y: double
-        + getX() double
-        + getY() double
+        + getX() double ~query~
+        + getY() double ~query~
         + setX(x: double) *SimpleVector
         + setY(y: double) *SimpleVector
-        + abs() double
-        + operator+(vec&: SimpleVector) SimpleVector
+        + abs() double ~query~
+        + operator+(vec&: SimpleVector) SimpleVector ~query~
         + operator+=(vec&: SimpleVector) void
-        + operator-(vec&: SimpleVector) SimpleVector
+        + operator-(vec&: SimpleVector) SimpleVector ~query~
         + operator-=(vec&: SimpleVector) void
-        + operator*(double: scalar) SimpleVector
+        + operator*(double: scalar) SimpleVector ~query~
         + operator*=(double: scalar) void
-        + getUnitVector() SimpleVector
-        + operator<<(double scalar) void
-    }
-
-    class CollisionReport {
-        <<perspective>>
-        - object_1: SpaceObject*
-        - object_2: SpaceObject*
-        - coordinates: SimpleVector
-        + getObject1() SpaceObject
-        + getObject2() SpaceObject
-        + getCoordinates() SimpleVector
-        + printReport() void
+        + getUnitVector() SimpleVector ~query~
+        + operator==(v: const SimpleVector&) bool ~query~
+        + operator!=(v: const SimpleVector&) bool ~query~
+        + operator<<(double scalar) void ~friend, query~
     }
 
     class Physics {
@@ -196,7 +189,12 @@ classDiagram
         + GRAVITATIONAL_CONSTANT double
         + calculateGravitationalForce(m1: double, m2: double, dist: double) double
     }
+```
 
+### App class diagram
+
+```mermaid
+classDiagram
     class logs {
         <<namespace>>
         startLogTable(stream: ostream&) void
@@ -209,59 +207,17 @@ classDiagram
         + startLog(): fstream
         + closeLog(myFile: fstream&)
     }
-```
 
-## Process
-
-Currently outlining the "Idea" Flowchart for the main engine loop:
-
-```mermaid
-flowchart TD
-    %% Nodes
-    Start(Start)
-    InitSim[[Create Simulation Object]]
-    AddObj[[Create and add SpaceObjects]]
-    
-    %% Loop Condition
-    LoopStart{Tick < Last Tick?}
-    
-    %% Simulation Logic
-    CalcForce[For each SpaceObject:<br/>calculateAppliedForce]
-    MoveObj[For each SpaceObject:<br/>recalculatePos]
-    Collisions[[Collision processing]]
-    Logging[[Log Object Info to CSV/Console]]
-    Graphics[[Update graphics]]
-    Visualisation[[Diagram visualisation]]
-    
-    End(End)
-
-    %% Connections
-    Start --> InitSim --> AddObj --> LoopStart
-    
-    LoopStart -- Yes --> CalcForce
-    CalcForce --> MoveObj
-    MoveObj --> Collisions
-    Collisions --> Logging
-    
-    %% Return to loop
-    Logging --> Graphics --> LoopStart
-    
-    LoopStart -- No --> Visualisation --> End
-
-    %% Grouping to match Code Structure
-    subgraph Simulation::calculateSystem
-        CalcForce
-        MoveObj
-        Collisions
-    end
-
-    %% Styling
-    style Collisions fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
-    classDef future color:#888
-    class Collisions future
-
-    style Graphics fill:#f9f9f9,stroke:#999,stroke-dasharray: 5 5
-    class Graphics future
+        class CollisionReport {
+        <<perspective>>
+        - object_1: SpaceObject*
+        - object_2: SpaceObject*
+        - coordinates: SimpleVector
+        + getObject1() SpaceObject
+        + getObject2() SpaceObject
+        + getCoordinates() SimpleVector
+        + printReport() void
+    }
 ```
 
 ## Simulation Setup Guide
@@ -277,17 +233,14 @@ uint64_t totalTicks = 1000000;
 double dt = 0.1;
 Simulation sim(totalTicks, dt);
 
-FixedObject sun(1, 1.989e30, SimpleVector(0, 0));
-FreeObject earth(2, 5.972e24, SimpleVector(1.496e11, 0), SimpleVector(0, 29780));
+SpaceObject* sun = sim.createFixedObject(1.989e30, SimpleVector(0, 0));
+SpaceObject* earth = sim.createFreeObject(5.972e24, SimpleVector(1.496e11, 0), SimpleVector(0, 29780));
 ```
 
-### 2. Register Objects and Initialize Logger
+### 2. Initialize Logger
 
 Add your objects to the simulation. Then, open the CSV output file and write the table headers.
 ```c++
-sim.addObject(&sun);
-sim.addObject(&earth);
-
 // Opens 'simulation_results.csv' and writes CSV headers
 std::fstream logFile = csvLog::startLog(); 
 logs::startLogTable(logFile);
@@ -299,19 +252,20 @@ The simulation calculates forces and updates positions in each step. To log mult
 
 ```c++
 int snapShotInterval = 5000; // Log data every 5000 ticks
-std::vector<SpaceObject*> logList = { &sun, &earth };
 
-while (sim.getCurrentTick() < sim.getLastTick()) {
+while (sim.running()) {
     // Perform physics calculations
     sim.calculateSystem();
 
     // Log the state of all objects at the interval
     if (sim.getCurrentTick() % snapShotInterval == 0) {
-        for (auto* obj : logList) {
-            logs::logFullObjectInfo(logFile, obj, sim.getCurrentTick());
+        for (auto* obj : logList) {            
+            logs::logFullObjectInfo(file, earth, sim.getCurrentTick());
+            logs::logFullObjectInfo(file, moon, sim.getCurrentTick());
         }
     }
 
+    sim.checkCollisions();
     // Advance to the next tick
     sim.nextStep();
 }
