@@ -1,7 +1,7 @@
-#include "objects.hpp"
-#include "test_framework.h"
-#include "simple_vector.hpp"
-#include "physics.hpp"
+#include <objects.hpp>
+#include <test_framework.h>
+#include <simple_vector.hpp>
+#include <physics.hpp>
 #include <cmath>
 
 constexpr double SIGMA = 0.001;

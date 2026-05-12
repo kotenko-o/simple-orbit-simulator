@@ -1,5 +1,5 @@
-#include "test_framework.h"
-#include "simple_vector.hpp"
+#include <test_framework.h>
+#include <simple_vector.hpp>
 #include <cmath>
 
 void test_constructor_and_getters() {
