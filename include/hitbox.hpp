@@ -19,8 +19,8 @@ class Hitbox {
          * @param[in]   other       Pointer to the Hitbox of the second body
          * @param[in]   myPos       Position vector of this hitbox's owner
          * @param[in]   otherPos    Position vector of the second body
-         * @return      bool        True if they collide; False if they do not collide or
-         *                          if the hitbox shape cannot be handled.
+         * @return      True if they collide; False if they do not collide or
+         *              if the hitbox shape cannot be handled.
          */
         virtual bool checkCollision(const Hitbox* other, 
                                 const SimpleVector& myPos, 
@@ -28,22 +28,35 @@ class Hitbox {
 };
 
 /**
+ * @class   HitCircle
  * @brief   A circular hitbox defined by a radius.
  */
 class HitCircle : public Hitbox {
     private:
         double radius;
     public:
+
         /**
          * @brief       Constructor of HitCircle.
          * @param[in]   r   The radius of the circle; must be greater than 0.
          */
         HitCircle(double r);
+
+        /**
+         * @brief   Check, if collision occured
+         * @param[in]   other   Pointer to the hitbox of the second body
+         * @param[in]   myPos   Vector to the possition of this body
+         * @param[in]   otherPos    Vector to the possition of the 2nd body
+         */
         bool checkCollision(const Hitbox* other, 
                             const SimpleVector& myPos, 
                             const SimpleVector& otherPos) const override;
-        double getRadius() const; 
-        SimpleVector getPosition() const;
+        
+        /**
+         * @brief   Getter-Fucttion of the radium
+         * @return  Radius of the circle
+         */
+        double getRadius() const;
 };
 
 #endif
