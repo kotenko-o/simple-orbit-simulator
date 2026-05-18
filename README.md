@@ -145,6 +145,7 @@ classDiagram
         # mass: double
         # appliedForce: SimpleVector
         # hitbox: unique_ptr<Hitbox>
+        # orientation: SimpleVector
         + recalculatePos(dt: double) ~isAbstract~
         + calculateAppliedForce(object: const SpaceObject&) ~isAbstract~
         + reset(): void

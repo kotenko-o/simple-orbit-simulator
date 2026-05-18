@@ -19,6 +19,8 @@ class SpaceObject {
         double mass;
         SimpleVector appliedForce;
         std::unique_ptr<Hitbox> hitbox;
+        // orientation-vector of the object
+        SimpleVector orientation;               
     public:
 
         /**
@@ -27,9 +29,12 @@ class SpaceObject {
          * @param[in]   mass    Mass of the object
          * @param[in]   pos     Vector of the position of an object
          * @param[in]   hb      Pointer to the hitbox
+         * @param[in]   direction   Direction vector
          */
-        SpaceObject(int id, double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr) 
-            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)), hitbox(hb ? std::move(hb) : std::make_unique<HitCircle>(1.0)) {}
+        SpaceObject(int id, double mass, SimpleVector pos, std::unique_ptr<Hitbox> hb = nullptr, SimpleVector direction = SimpleVector(1, 0))
+            : id(id), position(pos), mass(mass), appliedForce(SimpleVector(0, 0)), 
+            hitbox(hb ? std::move(hb) : std::make_unique<HitCircle>(1.0)),
+            orientation(direction) {}
         virtual ~SpaceObject() {}
 
         /**
