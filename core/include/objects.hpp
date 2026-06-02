@@ -128,4 +128,72 @@ class FreeObject : public SpaceObject {
         virtual void reset() override;
 };
 
+/**
+ * @brief   Struct holding engine configuration/specs
+ */
+struct EngineSpec {
+    double thrust;
+    double fuelConsumption;
+};
+
+/**
+ * @brief   Class for the active/propelled object
+ * 
+ * Extends FreeObject with engine capabilities. Can receive throttle and
+ * direction commands to produce thrust
+ */
+class ActiveObject : public FreeObject {
+    private:
+        std::unique_ptr<EngineSpec> engine;
+        double fuelMass;
+        double throttle;
+        SimpleVector thrustDirection;
+        bool engineOn;
+
+    public:
+        ActiveObject(int id, double dryMass, SimpleVector pos, SimpleVector velocity,
+                     std::unique_ptr<EngineSpec> engine, double fuelMass,
+                     std::unique_ptr<Hitbox> hb = nullptr);
+
+        virtual ~ActiveObject() = default;
+
+        void engineStart();
+        void engineStop();
+        ActiveObject& setThrottle(double level);
+        ActiveObject& setThrustDirection(const SimpleVector& dir);
+
+        virtual void calculateAppliedForce(const SpaceObject& object) override;
+        virtual void recalculatePos(double dt) override;
+        virtual void reset() override;
+
+        /* -------------------
+         *  Getter functions
+           -------------------*/
+        bool isEngineOn() const {
+            return this->engineOn;
+        }
+        double getThrottle() const {
+            return this->throttle;
+        }
+        double getFuelMass() const {
+            return this->fuelMass;
+        }
+        double getTotalMass() const {
+            return this->mass + this->fuelMass;
+        }
+        bool hasFuel() const {
+            return this->fuelMass > 0.0;
+        }
+        SimpleVector getThrustDirection() const {
+            return this->thrustDirection;
+        }
+        const EngineSpec* getEngine() const {
+            return this->engine.get();
+        }
+
+    private:
+        SimpleVector calculateThrustForce() const;
+        void consumeFuel(double dt);
+};
+
 #endif
